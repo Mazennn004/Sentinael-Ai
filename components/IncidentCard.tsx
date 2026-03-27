@@ -1,22 +1,40 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import type { Incident } from "@/data/mockData";
 
-const SEVERITY_COLORS: Record<Incident["severity"], string> = {
+interface Incident {
+  id: string;
+  date: string;
+  time: string;
+  location: string;
+  severity: "critical" | "high" | "medium" | "low";
+  status: string;
+  speed: number;
+  gForce: number;
+}
+
+interface IncidentCardProps {
+  incident: Incident;
+  onPress?: () => void;
+}
+
+const SEVERITY_COLORS: Record<string, string> = {
   critical: "#FF3B5C",
   high: "#FF6B35",
   medium: "#FFB800",
   low: "#00E68A",
 };
 
-interface IncidentCardProps {
-  incident: Incident;
-  onPress: () => void;
-}
+const SEVERITY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  critical: "alert-circle",
+  high: "warning",
+  medium: "alert",
+  low: "information-circle",
+};
 
 export default function IncidentCard({ incident, onPress }: IncidentCardProps) {
-  const severityColor = SEVERITY_COLORS[incident.severity];
+  const color = SEVERITY_COLORS[incident.severity] || "#FFB800";
+  const icon = SEVERITY_ICONS[incident.severity] || "alert";
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -31,161 +49,63 @@ export default function IncidentCard({ incident, onPress }: IncidentCardProps) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={styles.card}
+      className="bg-white/[0.04] rounded-2xl mb-3 border border-white/[0.06] overflow-hidden"
     >
-      {/* Severity strip */}
-      <View style={[styles.severityStrip, { backgroundColor: severityColor }]} />
+      <View className="flex-row">
+        {/* Severity strip */}
+        <View className="w-[3px]" style={{ backgroundColor: color }} />
 
-      <View style={styles.content}>
-        {/* Top row */}
-        <View style={styles.topRow}>
-          <View
-            style={[
-              styles.severityBadge,
-              { backgroundColor: `${severityColor}20` },
-            ]}
-          >
+        <View className="flex-1 p-4 gap-3">
+          {/* Top row */}
+          <View className="flex-row items-center justify-between">
             <View
-              style={[styles.severityDot, { backgroundColor: severityColor }]}
-            />
-            <Text style={[styles.severityText, { color: severityColor }]}>
-              {incident.severity.toUpperCase()}
+              className="flex-row items-center px-2.5 py-1 rounded-lg gap-1.5"
+              style={{ backgroundColor: `${color}18` }}
+            >
+              <Ionicons name={icon} size={12} color={color} />
+              <Text
+                className="text-[10px] font-extrabold uppercase tracking-wider"
+                style={{ color }}
+              >
+                {incident.severity}
+              </Text>
+            </View>
+            <Text className="text-white/25 text-[11px] font-medium">
+              {incident.time}
             </Text>
           </View>
-          <Text style={styles.time}>{incident.time}</Text>
-        </View>
 
-        {/* Location */}
-        <View style={styles.locationRow}>
-          <Ionicons
-            name="location-sharp"
-            size={14}
-            color="rgba(255,255,255,0.5)"
-          />
-          <Text style={styles.location} numberOfLines={1}>
-            {incident.location}
-          </Text>
-        </View>
+          {/* Location */}
+          <View className="flex-row items-center gap-1.5">
+            <Ionicons name="location-sharp" size={14} color="rgba(255,255,255,0.35)" />
+            <Text className="text-white/75 text-[14px] font-semibold flex-1" numberOfLines={1}>
+              {incident.location}
+            </Text>
+          </View>
 
-        {/* Bottom row */}
-        <View style={styles.bottomRow}>
-          <Text style={styles.date}>{formatDate(incident.date)}</Text>
-          <View style={styles.statsRow}>
-            <View style={styles.stat}>
-              <Ionicons
-                name="speedometer"
-                size={12}
-                color="rgba(255,255,255,0.4)"
-              />
-              <Text style={styles.statText}>{incident.speed} km/h</Text>
-            </View>
-            <View style={styles.stat}>
-              <Ionicons
-                name="pulse"
-                size={12}
-                color="rgba(255,255,255,0.4)"
-              />
-              <Text style={styles.statText}>{incident.gForce}G</Text>
+          {/* Bottom row */}
+          <View className="flex-row items-center justify-between">
+            <Text className="text-white/20 text-[11px] font-medium">
+              {formatDate(incident.date)}
+            </Text>
+            <View className="flex-row items-center gap-3">
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="speedometer" size={11} color="rgba(255,255,255,0.25)" />
+                <Text className="text-white/35 text-[11px] font-semibold">
+                  {incident.speed} km/h
+                </Text>
+              </View>
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="pulse" size={11} color="rgba(255,255,255,0.25)" />
+                <Text className="text-white/35 text-[11px] font-semibold">
+                  {incident.gForce}G
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={14} color="rgba(255,255,255,0.15)" />
             </View>
           </View>
         </View>
-      </View>
-
-      {/* Chevron */}
-      <View style={styles.chevron}>
-        <Ionicons
-          name="chevron-forward"
-          size={18}
-          color="rgba(255,255,255,0.3)"
-        />
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    marginBottom: 12,
-  },
-  severityStrip: {
-    width: 4,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-    gap: 10,
-  },
-  topRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  severityBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-    gap: 6,
-  },
-  severityDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  severityText: {
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  time: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.4)",
-    fontWeight: "500",
-  },
-  locationRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  location: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.85)",
-    fontWeight: "600",
-    flex: 1,
-  },
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  date: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.35)",
-    fontWeight: "400",
-  },
-  statsRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  stat: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-  },
-  statText: {
-    fontSize: 11,
-    color: "rgba(255, 255, 255, 0.4)",
-    fontWeight: "500",
-  },
-  chevron: {
-    justifyContent: "center",
-    paddingRight: 12,
-  },
-});

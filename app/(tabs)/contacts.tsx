@@ -2,12 +2,13 @@ import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
   TextInput,
   Modal,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -46,313 +47,144 @@ export default function ContactsScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top }}>
       <LinearGradient
-        colors={["#05080F", "#0A1023", "#0F1A35"]}
-        style={StyleSheet.absoluteFill}
+        colors={["#060A0F", "#0A0E17", "#0A1018"]}
+        className="absolute inset-0"
       />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View style={styles.header}>
+        <View className="flex-row justify-between items-center pt-4 pb-5">
           <View>
-            <Text style={styles.title}>Emergency Contacts</Text>
-            <Text style={styles.subtitle}>
-              {contacts.length} contact{contacts.length !== 1 ? "s" : ""} saved
+            <View className="flex-row items-center gap-2 mb-1">
+              <Ionicons name="people-outline" size={16} color="#00B4C6" />
+              <Text className="text-xs font-bold text-white/30 tracking-[2px] uppercase">
+                Emergency
+              </Text>
+            </View>
+            <Text className="text-2xl font-extrabold text-white">
+              Contacts
             </Text>
           </View>
           <TouchableOpacity
-            style={styles.addBtn}
+            className="rounded-[14px] overflow-hidden"
             activeOpacity={0.7}
             onPress={() => setShowAddModal(true)}
           >
             <LinearGradient
-              colors={["#00D4E6", "#00A8B8"]}
-              style={styles.addBtnGradient}
+              colors={["#00D4E6", "#00B4C6"]}
+              className="w-11 h-11 items-center justify-center rounded-[14px]"
             >
-              <Ionicons name="add" size={22} color="#fff" />
+              <Ionicons name="add" size={22} color="#060A0F" />
             </LinearGradient>
           </TouchableOpacity>
         </View>
 
         {/* Info banner */}
-        <View style={styles.infoBanner}>
-          <Ionicons
-            name="information-circle"
-            size={18}
-            color="#00D4E6"
-          />
-          <Text style={styles.infoText}>
+        <View className="flex-row bg-[rgba(0,180,200,0.04)] rounded-[14px] p-3.5 gap-2.5 border border-[rgba(0,180,200,0.1)] mb-5 items-start">
+          <Ionicons name="information-circle-outline" size={16} color="#00B4C6" />
+          <Text className="flex-1 text-[11px] text-white/35 leading-[17px]">
             These contacts will be notified automatically if an accident is
             detected and you don't respond within 10 seconds.
           </Text>
         </View>
 
-        {/* Contacts List */}
-        <View style={styles.listSection}>
+        <View>
           {contacts.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons
-                name="people-outline"
-                size={48}
-                color="rgba(255,255,255,0.15)"
-              />
-              <Text style={styles.emptyTitle}>No contacts yet</Text>
-              <Text style={styles.emptyText}>
+            <View className="items-center py-[60px] gap-2">
+              <Ionicons name="people-outline" size={48} color="rgba(255,255,255,0.08)" />
+              <Text className="text-base font-semibold text-white/30">No contacts yet</Text>
+              <Text className="text-[13px] text-white/15 text-center px-10">
                 Add emergency contacts who'll be notified in case of an accident
               </Text>
             </View>
           ) : (
             contacts.map((contact) => (
-              <ContactCard
-                key={contact.id}
-                contact={contact}
-                onDelete={handleDelete}
-              />
+              <ContactCard key={contact.id} contact={contact} onDelete={handleDelete} />
             ))
           )}
         </View>
 
-        <View style={{ height: 100 }} />
+        <View className="h-[100px]" />
       </ScrollView>
 
       {/* Add Contact Modal */}
-      <Modal
-        visible={showAddModal}
-        transparent
-        animationType="slide"
-        statusBarTranslucent
-      >
-        <View style={styles.modalOverlay}>
+      <Modal visible={showAddModal} transparent animationType="slide" statusBarTranslucent>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
+          <View className="flex-1 bg-black/70" onTouchEnd={() => setShowAddModal(false)} />
           <View
-            style={[styles.modalContent, { paddingBottom: insets.bottom + 20 }]}
+            className="bg-dark-800 rounded-t-[28px] p-6 gap-4"
+            style={{ paddingBottom: (insets.bottom || 0) + 20 }}
           >
-            <View style={styles.modalHandle} />
-            <Text style={styles.modalTitle}>Add Emergency Contact</Text>
+            <View className="w-9 h-1 rounded-full bg-white/10 self-center mb-2" />
+            <Text className="text-xl font-bold text-white mb-1">
+              Add Emergency Contact
+            </Text>
 
-            <View style={styles.modalInput}>
-              <Ionicons
-                name="person-outline"
-                size={18}
-                color="rgba(255,255,255,0.35)"
-              />
+            <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
+              <Ionicons name="person-outline" size={16} color="rgba(255,255,255,0.25)" />
               <TextInput
-                style={styles.modalInputText}
+                className="flex-1 text-white text-sm"
                 placeholder="Full name"
-                placeholderTextColor="rgba(255,255,255,0.25)"
+                placeholderTextColor="rgba(255,255,255,0.15)"
                 value={newName}
                 onChangeText={setNewName}
               />
             </View>
 
-            <View style={styles.modalInput}>
-              <Ionicons
-                name="call-outline"
-                size={18}
-                color="rgba(255,255,255,0.35)"
-              />
+            <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
+              <Ionicons name="call-outline" size={16} color="rgba(255,255,255,0.25)" />
               <TextInput
-                style={styles.modalInputText}
+                className="flex-1 text-white text-sm"
                 placeholder="Phone number"
-                placeholderTextColor="rgba(255,255,255,0.25)"
+                placeholderTextColor="rgba(255,255,255,0.15)"
                 keyboardType="phone-pad"
                 value={newPhone}
                 onChangeText={setNewPhone}
               />
             </View>
 
-            <View style={styles.modalInput}>
-              <Ionicons
-                name="heart-outline"
-                size={18}
-                color="rgba(255,255,255,0.35)"
-              />
+            <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
+              <Ionicons name="heart-outline" size={16} color="rgba(255,255,255,0.25)" />
               <TextInput
-                style={styles.modalInputText}
+                className="flex-1 text-white text-sm"
                 placeholder="Relationship (e.g. Father, Doctor)"
-                placeholderTextColor="rgba(255,255,255,0.25)"
+                placeholderTextColor="rgba(255,255,255,0.15)"
                 value={newRelationship}
                 onChangeText={setNewRelationship}
               />
             </View>
 
-            <View style={styles.modalActions}>
+            <View className="flex-row gap-3 mt-2">
               <TouchableOpacity
-                style={styles.cancelBtn}
+                className="flex-1 h-[50px] rounded-[14px] bg-white/[0.04] items-center justify-center border border-white/[0.04]"
                 onPress={() => setShowAddModal(false)}
               >
-                <Text style={styles.cancelBtnText}>Cancel</Text>
+                <Text className="text-white/40 text-[15px] font-semibold">Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.saveBtnWrapper}
+                className="flex-1 rounded-[14px] overflow-hidden"
                 onPress={handleAdd}
                 activeOpacity={0.85}
               >
                 <LinearGradient
-                  colors={["#00D4E6", "#00A8B8"]}
-                  style={styles.saveBtn}
+                  colors={["#00D4E6", "#00B4C6"]}
+               
+                  style={{flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 16, paddingHorizontal: 24, gap: 8}}
                 >
-                  <Text style={styles.saveBtnText}>Save Contact</Text>
+                  <Text className="text-dark-950 text-[15px] font-bold">Save Contact</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#05080F",
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 16,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#fff",
-    letterSpacing: 0.5,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.4)",
-    marginTop: 4,
-  },
-  addBtn: {
-    borderRadius: 14,
-    overflow: "hidden",
-  },
-  addBtnGradient: {
-    width: 44,
-    height: 44,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  infoBanner: {
-    flexDirection: "row",
-    backgroundColor: "rgba(0, 212, 230, 0.08)",
-    borderRadius: 14,
-    padding: 14,
-    gap: 10,
-    borderWidth: 1,
-    borderColor: "rgba(0, 212, 230, 0.15)",
-    marginBottom: 20,
-    alignItems: "flex-start",
-  },
-  infoText: {
-    flex: 1,
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.5)",
-    lineHeight: 18,
-  },
-  listSection: {},
-  emptyState: {
-    alignItems: "center",
-    paddingVertical: 60,
-    gap: 8,
-  },
-  emptyTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "rgba(255, 255, 255, 0.4)",
-  },
-  emptyText: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.25)",
-    textAlign: "center",
-    paddingHorizontal: 40,
-  },
-  // Modal
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "flex-end",
-  },
-  modalContent: {
-    backgroundColor: "#0F1A35",
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    padding: 24,
-    gap: 16,
-  },
-  modalHandle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-    alignSelf: "center",
-    marginBottom: 8,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: 4,
-  },
-  modalInput: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 14,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    height: 50,
-    gap: 12,
-  },
-  modalInputText: {
-    flex: 1,
-    color: "#fff",
-    fontSize: 14,
-    height: "100%",
-  },
-  modalActions: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 8,
-  },
-  cancelBtn: {
-    flex: 1,
-    height: 50,
-    borderRadius: 14,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  cancelBtnText: {
-    color: "rgba(255, 255, 255, 0.6)",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  saveBtnWrapper: {
-    flex: 1,
-    borderRadius: 14,
-    overflow: "hidden",
-  },
-  saveBtn: {
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  saveBtnText: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "700",
-  },
-});

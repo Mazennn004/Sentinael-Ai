@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withDelay,
-  Easing,
   withRepeat,
   withSequence,
+  Easing,
 } from "react-native-reanimated";
-import { Ionicons } from "@expo/vector-icons";
 
 interface ProcessingStepProps {
   label: string;
@@ -19,6 +18,12 @@ interface ProcessingStepProps {
   index: number;
 }
 
+const STATUS_COLORS = {
+  pending: { bg: "rgba(255,255,255,0.04)", icon: "rgba(255,255,255,0.15)" },
+  active: { bg: "rgba(0, 180, 200, 0.1)", icon: "#00B4C6" },
+  complete: { bg: "rgba(0, 180, 200, 0.06)", icon: "#00B4C6" },
+};
+
 export default function ProcessingStep({
   label,
   description,
@@ -26,28 +31,27 @@ export default function ProcessingStep({
   status,
   index,
 }: ProcessingStepProps) {
-  const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
+  const opacity = useSharedValue(0);
   const pulseScale = useSharedValue(1);
 
   useEffect(() => {
-    // Entrance animation
-    opacity.value = withDelay(
-      index * 150,
-      withTiming(1, { duration: 400, easing: Easing.out(Easing.cubic) })
-    );
-    translateY.value = withDelay(
-      index * 150,
-      withTiming(0, { duration: 400, easing: Easing.out(Easing.cubic) })
-    );
+    const delay = index * 300;
+    setTimeout(() => {
+      translateY.value = withTiming(0, {
+        duration: 400,
+        easing: Easing.out(Easing.cubic),
+      });
+      opacity.value = withTiming(1, { duration: 400 });
+    }, delay);
   }, []);
 
   useEffect(() => {
     if (status === "active") {
       pulseScale.value = withRepeat(
         withSequence(
-          withTiming(1.15, { duration: 600 }),
-          withTiming(1, { duration: 600 })
+          withTiming(1.05, { duration: 800 }),
+          withTiming(1, { duration: 800 })
         ),
         -1,
         true
@@ -58,134 +62,58 @@ export default function ProcessingStep({
   }, [status]);
 
   const containerStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
     transform: [{ translateY: translateY.value }],
+    opacity: opacity.value,
   }));
 
-  const pulseStyle = useAnimatedStyle(() => ({
+  const iconContainerStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulseScale.value }],
   }));
 
-  const getStatusColor = () => {
-    switch (status) {
-      case "complete":
-        return "#00E68A";
-      case "active":
-        return "#00D4E6";
-      case "pending":
-        return "rgba(255, 255, 255, 0.2)";
-    }
-  };
-
-  const getIcon = (): keyof typeof Ionicons.glyphMap => {
-    if (status === "complete") return "checkmark-circle";
-    return icon;
-  };
+  const colors = STATUS_COLORS[status];
 
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
-      {/* Connector line */}
-      {index > 0 && (
-        <View
-          style={[
-            styles.connectorLine,
-            {
+    <Animated.View style={containerStyle} className="flex-row items-start gap-3 mb-5">
+      <View className="items-center">
+        <Animated.View
+          style={[iconContainerStyle, { backgroundColor: colors.bg }]}
+          className="w-11 h-11 rounded-xl items-center justify-center border border-white/[0.06]"
+        >
+          <Ionicons
+            name={status === "complete" ? "checkmark-circle" : icon}
+            size={20}
+            color={colors.icon}
+          />
+        </Animated.View>
+        {index < 3 && (
+          <View
+            className="w-[2px] h-6 mt-1.5 rounded-full"
+            style={{
               backgroundColor:
-                status !== "pending"
-                  ? "rgba(0, 212, 230, 0.3)"
-                  : "rgba(255, 255, 255, 0.08)",
-            },
-          ]}
-        />
-      )}
+                status === "complete"
+                  ? "rgba(0, 180, 200, 0.2)"
+                  : "rgba(255,255,255,0.04)",
+            }}
+          />
+        )}
+      </View>
 
-      {/* Icon */}
-      <Animated.View
-        style={[
-          styles.iconContainer,
-          {
-            backgroundColor:
-              status === "pending"
-                ? "rgba(255, 255, 255, 0.06)"
-                : `${getStatusColor()}15`,
-            borderColor:
-              status === "pending"
-                ? "rgba(255, 255, 255, 0.08)"
-                : `${getStatusColor()}30`,
-          },
-          status === "active" && pulseStyle,
-        ]}
-      >
-        <Ionicons name={getIcon()} size={22} color={getStatusColor()} />
-      </Animated.View>
-
-      {/* Text */}
-      <View style={styles.textContainer}>
+      <View className="flex-1 pt-2.5">
         <Text
-          style={[
-            styles.label,
-            {
-              color:
-                status === "pending"
-                  ? "rgba(255,255,255,0.3)"
-                  : "rgba(255,255,255,0.9)",
-            },
-          ]}
+          className="text-[14px] font-semibold mb-0.5"
+          style={{
+            color:
+              status === "pending"
+                ? "rgba(255,255,255,0.25)"
+                : "#00B4C6",
+          }}
         >
           {label}
         </Text>
-        <Text
-          style={[
-            styles.description,
-            {
-              color:
-                status === "pending"
-                  ? "rgba(255,255,255,0.15)"
-                  : "rgba(255,255,255,0.45)",
-            },
-          ]}
-        >
+        <Text className="text-white/20 text-[12px] leading-[18px]">
           {description}
         </Text>
       </View>
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    gap: 16,
-    position: "relative",
-  },
-  connectorLine: {
-    position: "absolute",
-    left: 23,
-    top: -12,
-    width: 2,
-    height: 24,
-    borderRadius: 1,
-  },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-  },
-  textContainer: {
-    flex: 1,
-    gap: 2,
-  },
-  label: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  description: {
-    fontSize: 12,
-    fontWeight: "400",
-  },
-});

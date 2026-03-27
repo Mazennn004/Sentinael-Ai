@@ -1,15 +1,15 @@
 import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 const TAB_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
-  index: "shield-checkmark",
-  history: "time",
-  contacts: "people",
-  settings: "settings-sharp",
+  index: "radio-outline",
+  history: "time-outline",
+  contacts: "people-outline",
+  settings: "settings-outline",
 };
 
 const TAB_LABELS: Record<string, string> = {
@@ -27,9 +27,16 @@ export default function LiquidGlassTabBar({
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom || 8 }]}>
-      <BlurView intensity={40} tint="dark" style={styles.blurContainer}>
-        <View style={styles.glassOverlay}>
+    <View
+      className="absolute bottom-0 left-0 right-0 px-4"
+      style={{ paddingBottom: insets.bottom || 8 }}
+    >
+      <BlurView
+        intensity={40}
+        tint="dark"
+        className="rounded-[28px] overflow-hidden border border-white/[0.08]"
+      >
+        <View className="flex-row bg-[rgba(10,14,23,0.7)] py-2.5 px-2">
           {state.routes.map((route, index) => {
             const isFocused = state.index === index;
             const routeName = route.name;
@@ -53,26 +60,26 @@ export default function LiquidGlassTabBar({
                 key={route.key}
                 onPress={onPress}
                 activeOpacity={0.7}
-                style={styles.tab}
+                className="flex-1 items-center justify-center relative py-1"
               >
-                {isFocused && <View style={styles.activeGlow} />}
+                {isFocused && (
+                  <View className="absolute top-[-2px] w-10 h-10 rounded-full bg-teal-400/[0.1]" />
+                )}
                 <View
-                  style={[
-                    styles.iconContainer,
-                    isFocused && styles.iconContainerActive,
-                  ]}
+                  className={`w-9 h-9 rounded-full items-center justify-center ${
+                    isFocused ? "bg-teal-400/[0.08]" : ""
+                  }`}
                 >
                   <Ionicons
                     name={icon}
                     size={22}
-                    color={isFocused ? "#00D4E6" : "rgba(255,255,255,0.45)"}
+                    color={isFocused ? "#00B4C6" : "rgba(255,255,255,0.4)"}
                   />
                 </View>
                 <Text
-                  style={[
-                    styles.label,
-                    isFocused ? styles.labelActive : styles.labelInactive,
-                  ]}
+                  className={`text-[10px] font-semibold mt-0.5 tracking-wide ${
+                    isFocused ? "text-teal-500" : "text-white/35"
+                  }`}
                 >
                   {label}
                 </Text>
@@ -84,62 +91,3 @@ export default function LiquidGlassTabBar({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-  },
-  blurContainer: {
-    borderRadius: 28,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-  },
-  glassOverlay: {
-    flexDirection: "row",
-    backgroundColor: "rgba(10, 16, 35, 0.65)",
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-  },
-  tab: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    paddingVertical: 4,
-  },
-  activeGlow: {
-    position: "absolute",
-    top: -2,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(0, 212, 230, 0.12)",
-  },
-  iconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconContainerActive: {
-    backgroundColor: "rgba(0, 212, 230, 0.1)",
-  },
-  label: {
-    fontSize: 10,
-    fontWeight: "600",
-    marginTop: 2,
-    letterSpacing: 0.3,
-  },
-  labelActive: {
-    color: "#00D4E6",
-  },
-  labelInactive: {
-    color: "rgba(255, 255, 255, 0.4)",
-  },
-});

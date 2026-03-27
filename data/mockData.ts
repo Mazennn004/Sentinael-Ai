@@ -32,8 +32,8 @@ export interface UserProfile {
 }
 
 export const mockUser: UserProfile = {
-  name: "Mazen Ahmed",
-  email: "mazen@fue.edu.eg",
+  name: "Mazen Mohammed Hammad",
+  email: "[EMAIL_ADDRESS]",
   phone: "+20 100 123 4567",
   vehicleInfo: "Toyota Corolla 2022 — White",
 };
@@ -133,5 +133,111 @@ export const processingSteps = [
     label: "Generating incident report",
     description: "LLM writing structured assessment",
     icon: "document-text" as const,
+  },
+];
+
+// Documents & License data
+export interface DriverLicense {
+  name: string;
+  nameAr: string;
+  nationalId: string;
+  licenseNumber: string;
+  licenseClass: string;
+  issueDate: string;
+  expiryDate: string;
+  bloodType: string;
+  governorate: string;
+}
+
+export interface CarRegistration {
+  ownerName: string;
+  ownerNameAr: string;
+  make: string;
+  model: string;
+  year: number;
+  color: string;
+  engineNumber: string;
+  chassisNumber: string;
+  registrationNumber: string;
+  issueDate: string;
+  expiryDate: string;
+}
+
+export interface CarPlate {
+  lettersAr: string;
+  lettersEn: string;
+  numbers: string;
+  governorate: string;
+}
+
+export interface TrafficFine {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  status: "paid" | "unpaid" | "appealed";
+  linkedIncidentId?: string;
+  location: string;
+}
+
+export const mockDriverLicense: DriverLicense = {
+  name: "Mazen Mohammed Hammad",
+  nameAr: "مازن محمد حماد",
+  nationalId: "30001150100532",
+  licenseNumber: "12345678",
+  licenseClass: "Private (خاص)",
+  issueDate: "2024-01-15",
+  expiryDate: "2027-01-15",
+  bloodType: "O+",
+  governorate: "Cairo",
+};
+
+export const mockCarRegistration: CarRegistration = {
+  ownerName: "Mazen Mohammed Hammad",
+  ownerNameAr: "مازن محمد حماد",
+  make: "Cupra",
+  model: "Formentor",
+  year: 2024,
+  color: "Grey",
+  engineNumber: "2ZR-5847291",
+  chassisNumber: "JTDBR42E-X-0123456",
+  registrationNumber: "742819",
+  issueDate: "2023-06-20",
+  expiryDate: "2026-06-20",
+};
+
+export const mockCarPlate: CarPlate = {
+  lettersAr: "ن ه ر",
+  lettersEn: "N H R",
+  numbers: "3 5 7 ",
+  governorate: "CAIRO",
+};
+
+export const mockFines: TrafficFine[] = [
+  {
+    id: "fine-001",
+    date: "2026-03-09",
+    description: "Reckless driving — causing rear-end collision",
+    amount: 1500,
+    status: "unpaid",
+    linkedIncidentId: "inc-001",
+    location: "6th October Bridge, Cairo",
+  },
+  {
+    id: "fine-002",
+    date: "2026-01-16",
+    description: "Excessive speed in residential zone",
+    amount: 500,
+    status: "paid",
+    linkedIncidentId: "inc-003",
+    location: "Autostrad Road, Nasr City",
+  },
+  {
+    id: "fine-003",
+    date: "2025-11-03",
+    description: "Failure to maintain safe distance",
+    amount: 750,
+    status: "unpaid",
+    location: "Ring Road, Giza",
   },
 ];

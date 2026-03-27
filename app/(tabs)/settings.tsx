@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
   Switch,
@@ -28,42 +27,36 @@ function SettingRow({
   icon,
   label,
   subtitle,
-  iconColor = "#00D4E6",
+  iconColor = "#00B4C6",
   hasToggle,
   toggleValue,
   onToggle,
   onPress,
 }: SettingRowProps) {
   const content = (
-    <View style={settingStyles.row}>
+    <View className="flex-row items-center py-3.5 px-1 gap-3.5">
       <View
-        style={[
-          settingStyles.iconBg,
-          { backgroundColor: `${iconColor}15` },
-        ]}
+        className="w-9 h-9 rounded-[10px] items-center justify-center"
+        style={{ backgroundColor: `${iconColor}10` }}
       >
         <Ionicons name={icon} size={18} color={iconColor} />
       </View>
-      <View style={settingStyles.textContainer}>
-        <Text style={settingStyles.label}>{label}</Text>
-        {subtitle && <Text style={settingStyles.subtitle}>{subtitle}</Text>}
+      <View className="flex-1 gap-0.5">
+        <Text className="text-[15px] text-white/75 font-medium">{label}</Text>
+        {subtitle && <Text className="text-[11px] text-white/25">{subtitle}</Text>}
       </View>
       {hasToggle ? (
         <Switch
           value={toggleValue}
           onValueChange={onToggle}
           trackColor={{
-            false: "rgba(255,255,255,0.1)",
-            true: "rgba(0, 212, 230, 0.5)",
+            false: "rgba(255,255,255,0.06)",
+            true: "rgba(0, 180, 200, 0.35)",
           }}
-          thumbColor={toggleValue ? "#00D4E6" : "rgba(255,255,255,0.4)"}
+          thumbColor={toggleValue ? "#00B4C6" : "rgba(255,255,255,0.3)"}
         />
       ) : (
-        <Ionicons
-          name="chevron-forward"
-          size={18}
-          color="rgba(255,255,255,0.2)"
-        />
+        <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.12)" />
       )}
     </View>
   );
@@ -77,36 +70,6 @@ function SettingRow({
   );
 }
 
-const settingStyles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 4,
-    gap: 14,
-  },
-  iconBg: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textContainer: {
-    flex: 1,
-    gap: 2,
-  },
-  label: {
-    fontSize: 15,
-    color: "rgba(255, 255, 255, 0.85)",
-    fontWeight: "500",
-  },
-  subtitle: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.35)",
-  },
-});
-
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const [backgroundMonitoring, setBackgroundMonitoring] = useState(true);
@@ -119,66 +82,73 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top }}>
       <LinearGradient
-        colors={["#05080F", "#0A1023", "#0F1A35"]}
-        style={StyleSheet.absoluteFill}
+        colors={["#060A0F", "#0A0E17", "#0A1018"]}
+        className="absolute inset-0"
       />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
+        <View className="pt-4 pb-5">
+          <View className="flex-row items-center gap-2 mb-1">
+            <Ionicons name="settings-outline" size={16} color="#00B4C6" />
+            <Text className="text-xs font-bold text-white/30 tracking-[2px] uppercase">
+              Configuration
+            </Text>
+          </View>
+          <Text className="text-2xl font-extrabold text-white">
+            Settings
+          </Text>
         </View>
 
         {/* Profile Card */}
-        <TouchableOpacity style={styles.profileCard} activeOpacity={0.7}>
-          <View style={styles.profileAvatar}>
+        <TouchableOpacity
+          className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[18px] p-4 border border-[rgba(0,180,200,0.08)] gap-3.5 mb-2.5"
+          activeOpacity={0.7}
+        >
+          <View className="rounded-[18px] overflow-hidden">
             <LinearGradient
-              colors={["#00D4E6", "#007C8A"]}
-              style={styles.avatarGradient}
+              colors={["#00D4E6", "#00B4C6"]}
+              className="w-[52px] h-[52px] items-center justify-center"
             >
-              <Text style={styles.avatarInitials}>
-                {mockUser.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
+              <Text className="text-lg font-bold text-dark-950">
+                {mockUser.name.split(" ").map((n) => n[0]).join("")}
               </Text>
             </LinearGradient>
           </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{mockUser.name}</Text>
-            <Text style={styles.profileEmail}>{mockUser.email}</Text>
+          <View className="flex-1 gap-0.5">
+            <Text className="text-base font-bold text-white">{mockUser.name}</Text>
+            <Text className="text-[13px] text-white/30">{mockUser.email}</Text>
           </View>
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color="rgba(255,255,255,0.3)"
-          />
+          <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.15)" />
         </TouchableOpacity>
 
         {/* Vehicle Info */}
-        <View style={styles.vehicleCard}>
-          <Ionicons name="car-sport" size={20} color="#00D4E6" />
-          <Text style={styles.vehicleText}>{mockUser.vehicleInfo}</Text>
+        <View className="flex-row items-center bg-[rgba(0,180,200,0.04)] rounded-[14px] p-3.5 gap-2.5 border border-[rgba(0,180,200,0.08)] mb-6">
+          <Ionicons name="car-sport-outline" size={18} color="#00B4C6" />
+          <Text className="text-[13px] text-white/40 font-medium">
+            {mockUser.vehicleInfo}
+          </Text>
         </View>
 
         {/* Detection Settings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Detection</Text>
-          <View style={styles.sectionCard}>
+        <View className="mb-6">
+          <Text className="text-[11px] font-bold text-white/25 uppercase tracking-[2px] mb-2.5 pl-1">
+            Detection
+          </Text>
+          <View className="bg-[rgba(10,18,30,0.8)] rounded-2xl px-3 border border-[rgba(0,180,200,0.06)]">
             <SettingRow
-              icon="speedometer"
+              icon="speedometer-outline"
               label="Detection Sensitivity"
               subtitle="Adjust G-force threshold"
               iconColor="#FFB800"
             />
-            <View style={styles.separator} />
+            <View className="h-px bg-white/[0.03] ml-[54px]" />
             <SettingRow
-              icon="moon"
+              icon="moon-outline"
               label="Background Monitoring"
               subtitle="Monitor while app is in background"
               iconColor="#A855F7"
@@ -186,9 +156,9 @@ export default function SettingsScreen() {
               toggleValue={backgroundMonitoring}
               onToggle={setBackgroundMonitoring}
             />
-            <View style={styles.separator} />
+            <View className="h-px bg-white/[0.03] ml-[54px]" />
             <SettingRow
-              icon="alert-circle"
+              icon="alert-circle-outline"
               label="Auto SOS Alert"
               subtitle="Send SOS if no response in 10 seconds"
               iconColor="#FF3B5C"
@@ -199,21 +169,22 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* Notifications */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Preferences</Text>
-          <View style={styles.sectionCard}>
+        <View className="mb-6">
+          <Text className="text-[11px] font-bold text-white/25 uppercase tracking-[2px] mb-2.5 pl-1">
+            Preferences
+          </Text>
+          <View className="bg-[rgba(10,18,30,0.8)] rounded-2xl px-3 border border-[rgba(0,180,200,0.06)]">
             <SettingRow
-              icon="notifications"
+              icon="notifications-outline"
               label="Push Notifications"
-              iconColor="#00E68A"
+              iconColor="#00B4C6"
               hasToggle
               toggleValue={notifications}
               onToggle={setNotifications}
             />
-            <View style={styles.separator} />
+            <View className="h-px bg-white/[0.03] ml-[54px]" />
             <SettingRow
-              icon="phone-portrait"
+              icon="phone-portrait-outline"
               label="Haptic Feedback"
               iconColor="#FF6B35"
               hasToggle
@@ -223,169 +194,48 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* About */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
-          <View style={styles.sectionCard}>
+        <View className="mb-6">
+          <Text className="text-[11px] font-bold text-white/25 uppercase tracking-[2px] mb-2.5 pl-1">
+            About
+          </Text>
+          <View className="bg-[rgba(10,18,30,0.8)] rounded-2xl px-3 border border-[rgba(0,180,200,0.06)]">
             <SettingRow
-              icon="information-circle"
+              icon="information-circle-outline"
               label="About Sentinel AI"
               subtitle="v1.0.0 — FUE Graduation Project"
-              iconColor="#00D4E6"
+              iconColor="#00B4C6"
             />
-            <View style={styles.separator} />
+            <View className="h-px bg-white/[0.03] ml-[54px]" />
             <SettingRow
-              icon="document-text"
+              icon="document-text-outline"
               label="Privacy Policy"
-              iconColor="rgba(255,255,255,0.5)"
+              iconColor="rgba(255,255,255,0.35)"
             />
-            <View style={styles.separator} />
+            <View className="h-px bg-white/[0.03] ml-[54px]" />
             <SettingRow
-              icon="shield"
+              icon="shield-outline"
               label="Terms of Service"
-              iconColor="rgba(255,255,255,0.5)"
+              iconColor="rgba(255,255,255,0.35)"
             />
           </View>
         </View>
 
         {/* Logout */}
         <TouchableOpacity
-          style={styles.logoutBtn}
+          className="flex-row items-center justify-center bg-[rgba(255,59,92,0.04)] rounded-[14px] p-4 gap-2 border border-[rgba(255,59,92,0.08)] mb-4"
           activeOpacity={0.7}
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={20} color="#FF3B5C" />
-          <Text style={styles.logoutText}>Sign Out</Text>
+          <Text className="text-[15px] font-semibold text-severity-critical">Sign Out</Text>
         </TouchableOpacity>
 
-        <Text style={styles.footerText}>
+        <Text className="text-center text-[10px] text-white/[0.08] mb-2 font-mono">
           Sentinel AI — FUE Graduation Thesis 2026
         </Text>
 
-        <View style={{ height: 100 }} />
+        <View className="h-[100px]" />
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#05080F",
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-  },
-  header: {
-    paddingTop: 16,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#fff",
-    letterSpacing: 0.5,
-  },
-  profileCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 18,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    gap: 14,
-    marginBottom: 10,
-  },
-  profileAvatar: {
-    borderRadius: 22,
-    overflow: "hidden",
-  },
-  avatarGradient: {
-    width: 52,
-    height: 52,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarInitials: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#fff",
-  },
-  profileInfo: {
-    flex: 1,
-    gap: 2,
-  },
-  profileName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#fff",
-  },
-  profileEmail: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.4)",
-  },
-  vehicleCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 212, 230, 0.06)",
-    borderRadius: 14,
-    padding: 14,
-    gap: 10,
-    borderWidth: 1,
-    borderColor: "rgba(0, 212, 230, 0.1)",
-    marginBottom: 24,
-  },
-  vehicleText: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.6)",
-    fontWeight: "500",
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "rgba(255, 255, 255, 0.35)",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 10,
-    paddingLeft: 4,
-  },
-  sectionCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    marginLeft: 54,
-  },
-  logoutBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 59, 92, 0.08)",
-    borderRadius: 14,
-    padding: 16,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: "rgba(255, 59, 92, 0.15)",
-    marginBottom: 16,
-  },
-  logoutText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#FF3B5C",
-  },
-  footerText: {
-    textAlign: "center",
-    fontSize: 11,
-    color: "rgba(255, 255, 255, 0.15)",
-    marginBottom: 8,
-  },
-});

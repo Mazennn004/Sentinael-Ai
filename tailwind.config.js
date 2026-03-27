@@ -11,37 +11,33 @@ module.exports = {
       colors: {
         // Core dark backgrounds
         dark: {
-          950: "#05080F",
-          900: "#0A1023",
-          800: "#0F1A35",
-          700: "#162347",
-          600: "#1E2D5A",
+          950: "#060A0F",
+          900: "#0A0E17",
+          800: "#101820",
+          700: "#141C28",
+          600: "#1A2332",
         },
-        // Primary accent — electric cyan
-        cyan: {
-          50: "#E6FEFF",
-          100: "#B3FCFF",
-          200: "#80F9FF",
-          300: "#4DF6FF",
-          400: "#1AF3FF",
-          500: "#00D4E6",
-          600: "#00A8B8",
+        // Primary accent — teal/cyan
+        teal: {
+          50: "#E0FCFF",
+          100: "#B3F5FA",
+          200: "#80EDF5",
+          300: "#4DE4F0",
+          400: "#00D4E6",
+          500: "#00B4C6",
+          600: "#0098A8",
           700: "#007C8A",
-          800: "#00505C",
-          900: "#00242E",
+          800: "#00606C",
+          900: "#00444E",
         },
+        // Connected / success green
+        connected: "#00E68A",
         // Severity colors
         severity: {
           critical: "#FF3B5C",
           high: "#FF6B35",
           medium: "#FFB800",
           low: "#00E68A",
-        },
-        // Glass effect colors
-        glass: {
-          white: "rgba(255, 255, 255, 0.08)",
-          border: "rgba(255, 255, 255, 0.12)",
-          highlight: "rgba(0, 212, 230, 0.15)",
         },
       },
     },

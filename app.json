@@ -4,7 +4,7 @@
     "slug": "sentinelAi",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/sentinel-ai-icon.png",
     "scheme": "sentinelai",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

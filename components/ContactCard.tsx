@@ -1,26 +1,45 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Linking, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import type { EmergencyContact } from "@/data/mockData";
 
-interface ContactCardProps {
-  contact: EmergencyContact;
+export interface ContactCardProps {
+  contact: {
+    id: string;
+    name: string;
+    phone: string;
+    relationship: string;
+  };
   onDelete?: (id: string) => void;
 }
 
-const AVATAR_COLORS = ["#00D4E6", "#FF6B35", "#A855F7", "#00E68A", "#FF3B5C"];
+const getAvatarColor = (name: string) => {
+  const colors = [
+    "#00B4C6",
+    "#A855F7",
+    "#FF6B35",
+    "#3B82F6",
+    "#FF3B5C",
+    "#FFB800",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
 
 export default function ContactCard({ contact, onDelete }: ContactCardProps) {
-  const avatarColor =
-    AVATAR_COLORS[
-      contact.name.charCodeAt(0) % AVATAR_COLORS.length
-    ];
+  const avatarColor = getAvatarColor(contact.name);
   const initials = contact.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  const handleCall = () => {
+    Linking.openURL(`tel:${contact.phone}`);
+  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -38,107 +57,48 @@ export default function ContactCard({ contact, onDelete }: ContactCardProps) {
   };
 
   return (
-    <View style={styles.card}>
-      {/* Avatar */}
-      <View style={[styles.avatar, { backgroundColor: `${avatarColor}20` }]}>
-        <Text style={[styles.initials, { color: avatarColor }]}>
-          {initials}
-        </Text>
-      </View>
-
-      {/* Info */}
-      <View style={styles.info}>
-        <Text style={styles.name}>{contact.name}</Text>
-        <View style={styles.detailsRow}>
-          <Text style={styles.relationship}>{contact.relationship}</Text>
-          <View style={styles.dot} />
-          <Text style={styles.phone}>{contact.phone}</Text>
+    <View className="bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 mb-3 border border-[rgba(0,180,200,0.08)]">
+      <View className="flex-row items-center gap-3">
+        <View
+          className="w-[48px] h-[48px] rounded-[16px] items-center justify-center"
+          style={{ backgroundColor: `${avatarColor}18` }}
+        >
+          <Text className="text-[16px] font-bold" style={{ color: avatarColor }}>
+            {initials}
+          </Text>
         </View>
-      </View>
 
-      {/* Actions */}
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionBtn} activeOpacity={0.6}>
-          <Ionicons name="call" size={18} color="#00D4E6" />
-        </TouchableOpacity>
-        {onDelete && (
+        <View className="flex-1 gap-1">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-white text-[15px] font-semibold">
+              {contact.name}
+            </Text>
+            <View className="bg-white/[0.06] px-2 py-0.5 rounded-md">
+              <Text className="text-white/35 text-[10px] font-semibold">
+                {contact.relationship}
+              </Text>
+            </View>
+          </View>
+          <Text className="text-white/30 text-[13px]">{contact.phone}</Text>
+        </View>
+
+        <View className="flex-row gap-2">
           <TouchableOpacity
-            style={styles.actionBtn}
-            activeOpacity={0.6}
-            onPress={handleDelete}
+            onPress={handleCall}
+            activeOpacity={0.7}
+            className="w-9 h-9 rounded-[10px] bg-[rgba(0,180,200,0.1)] items-center justify-center"
           >
-            <Ionicons name="trash-outline" size={18} color="#FF3B5C" />
+            <Ionicons name="call" size={16} color="#00B4C6" />
           </TouchableOpacity>
-        )}
+          <TouchableOpacity
+            onPress={handleDelete}
+            activeOpacity={0.7}
+            className="w-9 h-9 rounded-[10px] bg-[rgba(255,59,92,0.08)] items-center justify-center"
+          >
+            <Ionicons name="trash" size={16} color="#FF3B5C" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    marginBottom: 10,
-    gap: 12,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  initials: {
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  name: {
-    fontSize: 15,
-    color: "rgba(255, 255, 255, 0.9)",
-    fontWeight: "600",
-  },
-  detailsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  relationship: {
-    fontSize: 12,
-    color: "#00D4E6",
-    fontWeight: "500",
-  },
-  dot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  phone: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.4)",
-    fontWeight: "400",
-  },
-  actions: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  actionBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

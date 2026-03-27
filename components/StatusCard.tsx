@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface StatusCardProps {
@@ -13,45 +13,18 @@ export default function StatusCard({
   icon,
   label,
   value,
-  accentColor = "#00D4E6",
+  accentColor = "#00B4C6",
 }: StatusCardProps) {
   return (
-    <View style={styles.card}>
-      <View style={[styles.iconBg, { backgroundColor: `${accentColor}15` }]}>
-        <Ionicons name={icon} size={20} color={accentColor} />
+    <View className="flex-1 bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 border border-[rgba(0,180,200,0.06)]">
+      <View
+        className="w-9 h-9 rounded-[10px] items-center justify-center mb-3"
+        style={{ backgroundColor: `${accentColor}14` }}
+      >
+        <Ionicons name={icon} size={18} color={accentColor} />
       </View>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={[styles.value, { color: accentColor }]}>{value}</Text>
+      <Text className="text-white text-xl font-extrabold mb-0.5">{value}</Text>
+      <Text className="text-white/30 text-[11px] font-medium">{label}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    alignItems: "flex-start",
-    gap: 8,
-  },
-  iconBg: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  label: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.5)",
-    fontWeight: "500",
-    letterSpacing: 0.3,
-  },
-  value: {
-    fontSize: 22,
-    fontWeight: "700",
-  },
-});

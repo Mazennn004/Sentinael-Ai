@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,92 +11,79 @@ export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top }}>
       <LinearGradient
-        colors={["#05080F", "#0A1023", "#0F1A35"]}
-        style={StyleSheet.absoluteFill}
+        colors={["#060A0F", "#0A0E17", "#0A1018"]}
+        className="absolute inset-0"
       />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Incident History</Text>
-          <Text style={styles.subtitle}>
-            {mockIncidents.length} incidents recorded
+        <View className="pt-4 pb-1">
+          <View className="flex-row items-center gap-2 mb-1">
+            <Ionicons name="document-text-outline" size={18} color="#00B4C6" />
+            <Text className="text-xs font-bold text-white/30 tracking-[2px] uppercase">
+              Incident Reports
+            </Text>
+          </View>
+          <Text className="text-2xl font-extrabold text-white">
+            History
           </Text>
         </View>
 
         {/* Summary Bar */}
-        <View style={styles.summaryBar}>
-          <View style={styles.summaryItem}>
-            <View
-              style={[
-                styles.summaryDot,
-                { backgroundColor: "#FF3B5C" },
-              ]}
-            />
-            <Text style={styles.summaryCount}>
+        <View className="flex-row bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 border border-[rgba(0,180,200,0.08)] my-5">
+          <View className="flex-1 items-center gap-1">
+            <View className="w-2 h-2 rounded-full bg-severity-critical" />
+            <Text className="text-xl font-extrabold text-white">
               {mockIncidents.filter((i) => i.severity === "critical").length}
             </Text>
-            <Text style={styles.summaryLabel}>Critical</Text>
+            <Text className="text-[9px] text-white/25 font-bold uppercase tracking-wider">
+              Critical
+            </Text>
           </View>
-          <View style={styles.summaryDivider} />
-          <View style={styles.summaryItem}>
-            <View
-              style={[
-                styles.summaryDot,
-                { backgroundColor: "#FF6B35" },
-              ]}
-            />
-            <Text style={styles.summaryCount}>
+          <View className="w-px bg-white/[0.04]" />
+          <View className="flex-1 items-center gap-1">
+            <View className="w-2 h-2 rounded-full bg-severity-high" />
+            <Text className="text-xl font-extrabold text-white">
               {mockIncidents.filter((i) => i.severity === "high").length}
             </Text>
-            <Text style={styles.summaryLabel}>High</Text>
+            <Text className="text-[9px] text-white/25 font-bold uppercase tracking-wider">
+              High
+            </Text>
           </View>
-          <View style={styles.summaryDivider} />
-          <View style={styles.summaryItem}>
-            <View
-              style={[
-                styles.summaryDot,
-                { backgroundColor: "#FFB800" },
-              ]}
-            />
-            <Text style={styles.summaryCount}>
+          <View className="w-px bg-white/[0.04]" />
+          <View className="flex-1 items-center gap-1">
+            <View className="w-2 h-2 rounded-full bg-severity-medium" />
+            <Text className="text-xl font-extrabold text-white">
               {mockIncidents.filter((i) => i.severity === "medium").length}
             </Text>
-            <Text style={styles.summaryLabel}>Medium</Text>
+            <Text className="text-[9px] text-white/25 font-bold uppercase tracking-wider">
+              Medium
+            </Text>
           </View>
-          <View style={styles.summaryDivider} />
-          <View style={styles.summaryItem}>
-            <View
-              style={[
-                styles.summaryDot,
-                { backgroundColor: "#00E68A" },
-              ]}
-            />
-            <Text style={styles.summaryCount}>
+          <View className="w-px bg-white/[0.04]" />
+          <View className="flex-1 items-center gap-1">
+            <View className="w-2 h-2 rounded-full bg-severity-low" />
+            <Text className="text-xl font-extrabold text-white">
               {mockIncidents.filter((i) => i.severity === "low").length}
             </Text>
-            <Text style={styles.summaryLabel}>Low</Text>
+            <Text className="text-[9px] text-white/25 font-bold uppercase tracking-wider">
+              Low
+            </Text>
           </View>
         </View>
 
         {/* Incident List */}
-        <View style={styles.listSection}>
+        <View>
           {mockIncidents.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons
-                name="shield-checkmark"
-                size={48}
-                color="rgba(255,255,255,0.15)"
-              />
-              <Text style={styles.emptyTitle}>No incidents yet</Text>
-              <Text style={styles.emptyText}>
-                Your drive history will appear here
-              </Text>
+            <View className="items-center py-[60px] gap-2">
+              <Ionicons name="document-text-outline" size={48} color="rgba(255,255,255,0.08)" />
+              <Text className="text-base font-semibold text-white/30">No incidents yet</Text>
+              <Text className="text-[13px] text-white/15">Your drive history will appear here</Text>
             </View>
           ) : (
             mockIncidents.map((incident) => (
@@ -109,85 +96,8 @@ export default function HistoryScreen() {
           )}
         </View>
 
-        <View style={{ height: 100 }} />
+        <View className="h-[100px]" />
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#05080F",
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-  },
-  header: {
-    paddingTop: 16,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#fff",
-    letterSpacing: 0.5,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.4)",
-    marginTop: 4,
-  },
-  summaryBar: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    marginBottom: 24,
-  },
-  summaryItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-  },
-  summaryDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  summaryCount: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: "#fff",
-  },
-  summaryLabel: {
-    fontSize: 10,
-    color: "rgba(255, 255, 255, 0.35)",
-    fontWeight: "600",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  summaryDivider: {
-    width: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-  },
-  listSection: {
-    gap: 0,
-  },
-  emptyState: {
-    alignItems: "center",
-    paddingVertical: 60,
-    gap: 8,
-  },
-  emptyTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "rgba(255, 255, 255, 0.4)",
-  },
-  emptyText: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.25)",
-  },
-});

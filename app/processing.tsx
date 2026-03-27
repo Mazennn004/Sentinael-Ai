@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -11,14 +11,11 @@ export default function ProcessingScreen() {
   const insets = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Simulate processing steps
   useEffect(() => {
     if (currentStep >= processingSteps.length) return;
-
     const timer = setTimeout(() => {
       setCurrentStep((prev) => prev + 1);
-    }, 2500); // Each step takes 2.5 seconds
-
+    }, 2500);
     return () => clearTimeout(timer);
   }, [currentStep]);
 
@@ -35,25 +32,28 @@ export default function ProcessingScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
+    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top + 20 }}>
       <LinearGradient
-        colors={["#05080F", "#0A1023", "#0F1A35"]}
-        style={StyleSheet.absoluteFill}
+        colors={["#060A0F", "#0A0E17", "#0A1018"]}
+        className="absolute inset-0"
       />
 
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerIcon}>
+      <View className="items-center px-8 gap-2 mb-10">
+        <View
+          className="w-14 h-14 rounded-2xl items-center justify-center mb-2 border border-[rgba(0,180,200,0.1)]"
+          style={{ backgroundColor: isComplete ? "rgba(200,230,54,0.08)" : "rgba(0,180,200,0.06)" }}
+        >
           <Ionicons
             name={isComplete ? "checkmark-circle" : "sync"}
             size={24}
-            color={isComplete ? "#00E68A" : "#00D4E6"}
+            color={isComplete ? "#00E68A" : "#00B4C6"}
           />
         </View>
-        <Text style={styles.title}>
+        <Text className="text-[22px] font-extrabold text-white text-center">
           {isComplete ? "Report Ready" : "Processing Incident"}
         </Text>
-        <Text style={styles.subtitle}>
+        <Text className="text-sm text-white/30 text-center leading-5">
           {isComplete
             ? "Your incident report has been generated successfully"
             : "Please wait while we analyze the incident data..."}
@@ -61,7 +61,7 @@ export default function ProcessingScreen() {
       </View>
 
       {/* Progress Steps */}
-      <View style={styles.stepsContainer}>
+      <View className="px-7 flex-1">
         {processingSteps.map((step, index) => (
           <ProcessingStep
             key={step.id}
@@ -76,40 +76,41 @@ export default function ProcessingScreen() {
 
       {/* Completion Actions */}
       {isComplete && (
-        <View style={styles.actionsSection}>
+        <View className="px-7 gap-3 mb-5">
           <TouchableOpacity
             onPress={handleViewReport}
             activeOpacity={0.85}
-            style={styles.viewBtnWrapper}
+            className="rounded-2xl overflow-hidden"
           >
             <LinearGradient
-              colors={["#00D4E6", "#00A8B8"]}
+              colors={["#00D4E6", "#00B4C6"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={styles.viewBtn}
+             
+              style={{flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 16, paddingHorizontal: 24, gap: 8}}
             >
-              <Ionicons name="document-text" size={20} color="#fff" />
-              <Text style={styles.viewBtnText}>View Report</Text>
+              <Ionicons name="document-text" size={20} color="#060A0F" />
+              <Text className="text-dark-950 text-base font-bold">View Report</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => router.replace("/(tabs)" as any)}
-            style={styles.homeBtn}
+            className="items-center py-3.5 rounded-2xl bg-[rgba(10,18,30,0.8)] border border-white/[0.04]"
             activeOpacity={0.7}
           >
-            <Text style={styles.homeBtnText}>Return to Home</Text>
+            <Text className="text-white/35 text-[15px] font-semibold">
+              Return to Home
+            </Text>
           </TouchableOpacity>
         </View>
       )}
 
       {/* SOS Status */}
-      <View
-        style={[styles.sosBar, { paddingBottom: insets.bottom + 12 }]}
-      >
-        <View style={styles.sosIndicator}>
-          <View style={styles.sosDot} />
-          <Text style={styles.sosText}>
+      <View className="px-7 pt-3" style={{ paddingBottom: insets.bottom + 12 }}>
+        <View className="flex-row items-center justify-center gap-2 bg-[rgba(255,59,92,0.04)] rounded-xl py-3 border border-[rgba(255,59,92,0.08)]">
+          <View className="w-2 h-2 rounded-full bg-severity-critical" />
+          <Text className="text-xs text-white/35 font-medium">
             Emergency contacts have been notified
           </Text>
         </View>
@@ -117,101 +118,3 @@ export default function ProcessingScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#05080F",
-  },
-  header: {
-    alignItems: "center",
-    paddingHorizontal: 32,
-    gap: 8,
-    marginBottom: 40,
-  },
-  headerIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: "rgba(0, 212, 230, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#fff",
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.4)",
-    textAlign: "center",
-    lineHeight: 20,
-  },
-  stepsContainer: {
-    paddingHorizontal: 28,
-    flex: 1,
-  },
-  actionsSection: {
-    paddingHorizontal: 28,
-    gap: 12,
-    marginBottom: 20,
-  },
-  viewBtnWrapper: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  viewBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    gap: 10,
-  },
-  viewBtnText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  homeBtn: {
-    alignItems: "center",
-    paddingVertical: 14,
-    borderRadius: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  homeBtnText: {
-    color: "rgba(255, 255, 255, 0.5)",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  sosBar: {
-    paddingHorizontal: 28,
-    paddingTop: 12,
-  },
-  sosIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    backgroundColor: "rgba(255, 59, 92, 0.08)",
-    borderRadius: 12,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: "rgba(255, 59, 92, 0.15)",
-  },
-  sosDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#FF3B5C",
-  },
-  sosText: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.5)",
-    fontWeight: "500",
-  },
-});

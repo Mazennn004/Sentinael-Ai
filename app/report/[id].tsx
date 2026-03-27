@@ -1,15 +1,11 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Polyline } from "react-native-svg";
+import EventTimeline from "@/components/EventTimeline";
 import { mockIncidents } from "@/data/mockData";
 
 const SEVERITY_COLORS: Record<string, string> = {
@@ -19,6 +15,20 @@ const SEVERITY_COLORS: Record<string, string> = {
   low: "#00E68A",
 };
 
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: "Critical Impact",
+  high: "High Impact",
+  medium: "Moderate Impact",
+  low: "Minor Impact",
+};
+
+const IMPACT_TYPES: Record<string, string> = {
+  critical: "Rear-End\nCollision",
+  high: "Side Impact\nCollision",
+  medium: "Fender\nBender",
+  low: "Minor\nContact",
+};
+
 export default function ReportDetailScreen() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -26,25 +36,37 @@ export default function ReportDetailScreen() {
   const incident = mockIncidents.find((i) => i.id === id) || mockIncidents[0];
   const severityColor = SEVERITY_COLORS[incident.severity] || "#FFB800";
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  const timelineEvents = [
+    {
+      label: "Sensor Anomaly Detected",
+      time: `${incident.time}`,
+      color: "rgba(255,255,255,0.25)",
+    },
+    {
+      label: "AI Verification Complete",
+      time: `${incident.time}`,
+      detail: "Accident Confirmed",
+      color: "#00B4C6",
+    },
+    {
+      label: "Authorities Alerted (SOS)",
+      time: `${incident.time}`,
+      detail: "Emergency services dispatched to location.",
+      color: "#FF3B5C",
+      icon: "shield-checkmark" as keyof typeof Ionicons.glyphMap,
+      highlight: true,
+    },
+  ];
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top }}>
       <LinearGradient
-        colors={["#05080F", "#0A1023", "#0F1A35"]}
-        style={StyleSheet.absoluteFill}
+        colors={["#060A0F", "#0A0E17", "#0A1018"]}
+        className="absolute inset-0"
       />
 
       {/* Header Bar */}
-      <View style={styles.headerBar}>
+      <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity
           onPress={() => {
             if (router.canGoBack()) {
@@ -53,472 +75,167 @@ export default function ReportDetailScreen() {
               router.replace("/(tabs)/history" as any);
             }
           }}
-          style={styles.backBtn}
+          className="w-10 h-10 rounded-xl bg-white/[0.04] items-center justify-center"
           activeOpacity={0.7}
         >
-          <Ionicons
-            name="arrow-back"
-            size={22}
-            color="rgba(255,255,255,0.7)"
-          />
+          <Ionicons name="chevron-back" size={22} color="rgba(255,255,255,0.6)" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Incident Report</Text>
-        <TouchableOpacity style={styles.shareBtn} activeOpacity={0.7}>
-          <Ionicons
-            name="share-outline"
-            size={20}
-            color="rgba(255,255,255,0.7)"
-          />
+        <View className="items-center">
+          <Text className="text-[17px] font-bold text-white">Incident Report</Text>
+          <Text className="text-[11px] text-white/25 font-mono mt-0.5">
+            ID: AI-{incident.id.toUpperCase().slice(0, 4)}-RX
+          </Text>
+        </View>
+        <TouchableOpacity
+          className="w-10 h-10 rounded-xl bg-white/[0.04] items-center justify-center"
+          activeOpacity={0.7}
+        >
+          <Ionicons name="share-social-outline" size={20} color="#00B4C6" />
         </TouchableOpacity>
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Severity Banner */}
-        <View
-          style={[
-            styles.severityBanner,
-            { backgroundColor: `${severityColor}12` },
-          ]}
-        >
-          <View
-            style={[
-              styles.severityIconBg,
-              { backgroundColor: `${severityColor}20` },
-            ]}
-          >
-            <Ionicons name="warning" size={22} color={severityColor} />
-          </View>
-          <View style={styles.severityInfo}>
-            <Text
-              style={[
-                styles.severityLabel,
-                { color: severityColor },
-              ]}
-            >
-              {incident.severity.toUpperCase()} SEVERITY
+        {/* DASHCAM EVIDENCE */}
+        <View className="mt-2 mb-6">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-xs font-bold text-white/40 tracking-[2px] uppercase">
+              Dashcam Evidence
             </Text>
-            <Text style={styles.severityDate}>
-              {formatDate(incident.date)} at {incident.time}
-            </Text>
-          </View>
-        </View>
-
-        {/* Video Footage */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Crash Footage</Text>
-          <View style={styles.sectionCard}>
-            <View style={styles.videoHeader}>
-              <View style={styles.videoHeaderLeft}>
-                <Ionicons name="videocam" size={16} color="#00D4E6" />
-                <Text style={styles.videoLabel}>Stitched Video</Text>
-              </View>
-              <View style={styles.durationBadge}>
-                <Text style={styles.durationText}>00:30</Text>
-              </View>
-            </View>
-            {/* Video placeholder */}
-            <View style={styles.videoPlaceholder}>
-              <View style={styles.playButton}>
-                <Ionicons name="play" size={32} color="#fff" />
-              </View>
-              <Text style={styles.videoPlaceholderText}>
-                Tap to play crash footage
+            <View className="flex-row items-center gap-1.5">
+              <Ionicons name="calendar-outline" size={12} color="rgba(255,255,255,0.3)" />
+              <Text className="text-[11px] text-white/30 font-medium">
+                {incident.date}, {incident.time}
               </Text>
             </View>
-            <View style={styles.videoMeta}>
-              <View style={styles.videoMetaItem}>
-                <Ionicons name="time-outline" size={12} color="rgba(255,255,255,0.35)" />
-                <Text style={styles.videoMetaText}>15s pre-impact</Text>
+          </View>
+
+          {/* Video Player Placeholder */}
+          <View className="rounded-2xl overflow-hidden border border-white/[0.06]">
+            <View className="h-[200px] bg-[rgba(10,15,25,0.9)] items-center justify-center relative">
+              {/* -10s CLIP badge */}
+              <View className="absolute top-3 left-3 flex-row items-center bg-[rgba(255,59,92,0.15)] px-2.5 py-1 rounded-lg gap-1.5">
+                <View className="w-1.5 h-1.5 rounded-full bg-severity-critical" />
+                <Text className="text-[10px] text-white/70 font-bold font-mono tracking-wider">
+                  -10s CLIP
+                </Text>
               </View>
-              <View style={styles.videoMetaDot} />
-              <View style={styles.videoMetaItem}>
-                <Ionicons name="time-outline" size={12} color="rgba(255,255,255,0.35)" />
-                <Text style={styles.videoMetaText}>15s post-impact</Text>
+
+              {/* Play button */}
+              <View className="w-14 h-14 rounded-full bg-white/10 items-center justify-center border border-white/[0.15]">
+                <Ionicons name="play" size={28} color="rgba(255,255,255,0.8)" />
+              </View>
+
+              {/* CAM label */}
+              <View className="absolute bottom-3 right-3 bg-[rgba(0,0,0,0.5)] px-2.5 py-1 rounded">
+                <Text className="text-[9px] text-white/50 font-bold font-mono tracking-wider">
+                  CAM: FRONT_MAIN
+                </Text>
               </View>
             </View>
           </View>
         </View>
 
-        {/* Telemetry */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Telemetry Data</Text>
-          <View style={styles.telemetryGrid}>
-            <View style={styles.telemetryItem}>
-              <Ionicons name="speedometer" size={20} color="#00D4E6" />
-              <Text style={styles.telemetryValue}>{incident.speed}</Text>
-              <Text style={styles.telemetryUnit}>km/h</Text>
-              <Text style={styles.telemetryLabel}>Impact Speed</Text>
-            </View>
-            <View style={styles.telemetryDivider} />
-            <View style={styles.telemetryItem}>
-              <Ionicons name="pulse" size={20} color="#FF6B35" />
-              <Text style={styles.telemetryValue}>{incident.gForce}</Text>
-              <Text style={styles.telemetryUnit}>G</Text>
-              <Text style={styles.telemetryLabel}>Peak G-Force</Text>
-            </View>
-          </View>
+        {/* AI TELEMETRY ANALYSIS header */}
+        <View className="flex-row items-center gap-2 mb-4">
+          <Ionicons name="grid-outline" size={16} color="#00B4C6" />
+          <Text className="text-xs font-bold text-white/50 tracking-[2px] uppercase">
+            AI Telemetry Analysis
+          </Text>
         </View>
 
-        {/* Detected Vehicles */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Detected Vehicles</Text>
-          <View style={styles.sectionCard}>
-            {incident.vehiclesDetected.map((vehicle, idx) => (
-              <View key={idx} style={styles.vehicleRow}>
-                <View style={styles.vehicleIcon}>
-                  <Ionicons name="car" size={16} color="#00D4E6" />
-                </View>
-                <Text style={styles.vehicleText}>{vehicle}</Text>
-                <View style={styles.detectedBadge}>
-                  <Text style={styles.detectedText}>YOLO v11</Text>
-                </View>
-              </View>
-            ))}
+        {/* Severity card */}
+        <View
+          className="bg-[rgba(255,59,92,0.04)] rounded-2xl p-4 border border-[rgba(255,59,92,0.1)] mb-3 flex-row items-center"
+        >
+          <View className="w-12 h-12 rounded-xl bg-[rgba(255,59,92,0.1)] items-center justify-center mr-3">
+            <Ionicons name="warning" size={24} color={severityColor} />
           </View>
-        </View>
-
-        {/* Damage Assessment */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>AI Damage Assessment</Text>
-          <View style={styles.sectionCard}>
-            <View style={styles.assessmentHeader}>
-              <Ionicons name="analytics" size={18} color="#A855F7" />
-              <Text style={styles.assessmentLabel}>LLM Analysis</Text>
-            </View>
-            <Text style={styles.assessmentText}>
-              {incident.damageAssessment}
+          <View className="flex-1">
+            <Text className="text-[10px] text-white/35 font-bold tracking-[1.5px] uppercase">
+              Assessed Severity
+            </Text>
+            <Text className="text-lg font-bold mt-0.5" style={{ color: severityColor }}>
+              {SEVERITY_LABELS[incident.severity]}
             </Text>
           </View>
-        </View>
-
-        {/* Actions */}
-        <View style={styles.actionsSection}>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={styles.primaryBtnWrapper}
-          >
-            <LinearGradient
-              colors={["#00D4E6", "#00A8B8"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.primaryBtn}
-            >
-              <Ionicons name="download-outline" size={20} color="#fff" />
-              <Text style={styles.primaryBtnText}>Download PDF Report</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <View style={styles.secondaryRow}>
-            <TouchableOpacity
-              style={styles.secondaryBtn}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="business" size={18} color="#00D4E6" />
-              <Text style={styles.secondaryBtnText}>Send to Insurance</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.secondaryBtn}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="shield" size={18} color="#FFB800" />
-              <Text style={styles.secondaryBtnText}>Traffic Authority</Text>
-            </TouchableOpacity>
+          <View className="items-end">
+            <Text className="text-[10px] text-white/30 font-medium">Confidence</Text>
+            <Text className="text-lg font-bold text-[#00B4C6] font-mono">98.4%</Text>
           </View>
         </View>
 
-        <View style={{ height: 32 }} />
+        {/* Impact Type + G-Force cards */}
+        <View className="flex-row gap-3 mb-6">
+          {/* Impact Type */}
+          <View className="flex-1 bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 border border-[rgba(0,180,200,0.08)]">
+            <View className="flex-row items-center gap-1.5 mb-2.5">
+              <Ionicons name="car-outline" size={14} color="rgba(255,255,255,0.35)" />
+              <Text className="text-[10px] text-white/30 font-bold tracking-[1.5px] uppercase">
+                Impact Type
+              </Text>
+            </View>
+            <Text className="text-[17px] font-bold text-white leading-[22px]">
+              {IMPACT_TYPES[incident.severity]}
+            </Text>
+          </View>
+
+          {/* Max G-Force */}
+          <View className="flex-1 bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 border border-[rgba(0,180,200,0.08)]">
+            <View className="flex-row items-center gap-1.5 mb-2.5">
+              <Ionicons name="pulse-outline" size={14} color="#FF6B35" />
+              <Text className="text-[10px] text-white/30 font-bold tracking-[1.5px] uppercase">
+                Max G-Force
+              </Text>
+            </View>
+            <View className="flex-row items-baseline gap-1">
+              <Text className="text-[28px] font-black text-white leading-[32px]">
+                {incident.gForce}
+              </Text>
+              <Text className="text-sm text-white/30 font-semibold">G</Text>
+            </View>
+            {/* Mini chart */}
+            <View className="h-[20px] mt-1">
+              <Svg width="100%" height={20} viewBox="0 0 100 20" preserveAspectRatio="none">
+                <Polyline
+                  points="0,16 15,14 25,12 35,10 45,6 55,2 65,4 75,8 85,14 100,16"
+                  fill="none"
+                  stroke="#FF6B35"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity={0.6}
+                />
+              </Svg>
+            </View>
+          </View>
+        </View>
+
+        {/* EVENT TIMELINE */}
+        <View className="mb-6">
+          <Text className="text-xs font-bold text-white/40 tracking-[2px] uppercase mb-4">
+            Event Timeline
+          </Text>
+          <EventTimeline events={timelineEvents} />
+        </View>
+
+        {/* Download Report */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          className="rounded-2xl overflow-hidden mb-4"
+        >
+          <View className="bg-[rgba(15,22,35,0.9)] flex-row items-center justify-center py-4 gap-2.5 border border-white/[0.06] rounded-2xl">
+            <Ionicons name="download-outline" size={20} color="#00B4C6" />
+            <Text className="text-[#00B4C6] text-base font-bold">
+              Download Full Report
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <View className="h-8" />
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#05080F",
-  },
-  headerBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: "#fff",
-  },
-  shareBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-  },
-  severityBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 16,
-    padding: 16,
-    gap: 14,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.06)",
-  },
-  severityIconBg: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  severityInfo: {
-    flex: 1,
-    gap: 4,
-  },
-  severityLabel: {
-    fontSize: 13,
-    fontWeight: "800",
-    letterSpacing: 1.5,
-  },
-  severityDate: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.4)",
-  },
-  section: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "rgba(255, 255, 255, 0.5)",
-    marginBottom: 10,
-    letterSpacing: 0.3,
-  },
-  sectionCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  videoHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  videoHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  videoLabel: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.8)",
-    fontWeight: "600",
-  },
-  durationBadge: {
-    backgroundColor: "rgba(0, 212, 230, 0.12)",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  durationText: {
-    fontSize: 12,
-    color: "#00D4E6",
-    fontWeight: "700",
-    fontVariant: ["tabular-nums"],
-  },
-  videoPlaceholder: {
-    height: 180,
-    borderRadius: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.06)",
-    gap: 10,
-  },
-  playButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "rgba(0, 212, 230, 0.25)",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(0, 212, 230, 0.4)",
-  },
-  videoPlaceholderText: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.3)",
-    fontWeight: "500",
-  },
-  videoMeta: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 12,
-    gap: 12,
-  },
-  videoMetaItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  videoMetaText: {
-    fontSize: 11,
-    color: "rgba(255, 255, 255, 0.35)",
-    fontWeight: "500",
-  },
-  videoMetaDot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-  },
-  telemetryGrid: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderRadius: 16,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  telemetryItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-  },
-  telemetryValue: {
-    fontSize: 28,
-    fontWeight: "800",
-    color: "#fff",
-    marginTop: 4,
-  },
-  telemetryUnit: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.35)",
-    fontWeight: "600",
-    marginTop: -2,
-  },
-  telemetryLabel: {
-    fontSize: 11,
-    color: "rgba(255, 255, 255, 0.3)",
-    fontWeight: "500",
-  },
-  telemetryDivider: {
-    width: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    marginVertical: 4,
-  },
-  vehicleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    gap: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.04)",
-  },
-  vehicleIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: "rgba(0, 212, 230, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  vehicleText: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.8)",
-    fontWeight: "500",
-    flex: 1,
-  },
-  detectedBadge: {
-    backgroundColor: "rgba(0, 212, 230, 0.1)",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  detectedText: {
-    fontSize: 9,
-    color: "#00D4E6",
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
-  assessmentHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 10,
-  },
-  assessmentLabel: {
-    fontSize: 12,
-    color: "#A855F7",
-    fontWeight: "600",
-  },
-  assessmentText: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.65)",
-    lineHeight: 22,
-  },
-  actionsSection: {
-    marginTop: 8,
-    gap: 12,
-  },
-  primaryBtnWrapper: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  primaryBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    gap: 10,
-  },
-  primaryBtnText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  secondaryRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  secondaryBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    borderRadius: 14,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    gap: 6,
-  },
-  secondaryBtnText: {
-    color: "rgba(255, 255, 255, 0.6)",
-    fontSize: 12,
-    fontWeight: "600",
-  },
-});
