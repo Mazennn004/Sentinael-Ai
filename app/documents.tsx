@@ -90,11 +90,7 @@ export default function DocumentsScreen() {
               end={{ x: 1, y: 0 }}
               style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
             >
-              <View className="flex-row items-center gap-2">
-                <Text className="text-white text-[11px] font-bold tracking-[2px]">
-                  جمهورية مصر العربية
-                </Text>
-              </View>
+             
               <Text className="text-white/50 text-[9px] font-bold tracking-wider">
                 ARAB REPUBLIC OF EGYPT
               </Text>
@@ -185,9 +181,7 @@ export default function DocumentsScreen() {
               end={{ x: 1, y: 0 }}
               style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
             >
-              <Text className="text-white/80 text-[11px] font-bold tracking-[2px]">
-                رخصة تسيير مركبة
-              </Text>
+             
               <Text className="text-white/40 text-[9px] font-bold tracking-wider">
                 VEHICLE LICENSE
               </Text>
@@ -264,25 +258,25 @@ export default function DocumentsScreen() {
 
           {/* Realistic Egyptian plate */}
           <View className="items-center justify-center w-full mt-2">
-            <View className="w-[250px] h-[110px] relative justify-center">
+            <View className="w-[270px] h-[170px] relative justify-center ">
               <Image 
                 source={require("../assets/images/car plate.png")} 
-                style={{ width: "100%", height: "100%", position: "absolute" }}
-                resizeMode="contain"
+                style={{ width: "100%", height: "100%", position: "absolute",borderRadius:10 }}
+                resizeMode="cover"
               />
               {/* Text Overlay Container — Placed over the white area of the plate */}
               <View className="absolute inset-0 flex-row items-center justify-center pt-3 pl-12 pr-4 pb-2">
                 {/* Numbers (Left) */}
                 <View className="flex-1 items-center justify-center">
-                  <Text className="text-[#1A1A1A] text-[26px] font-black tracking-[4px]">
-                    {mockCarPlate.numbers}
+                  <Text className="text-[#1A1A1A] text-4xl me-4   font-black tracking-[4px]">
+                    {/* {mockCarPlate.numbers} */}
                   </Text>
                 </View>
 
                 {/* Letters (Right) */}
                 <View className="flex-1 items-center justify-center">
-                  <Text className="text-[#1A1A1A] text-[24px] font-black tracking-[4px]">
-                    {mockCarPlate.lettersAr}
+                  <Text className="text-[#1A1A1A] text-4xl  font-black tracking-[4px]">
+                    {/* {mockCarPlate.lettersAr} */}
                   </Text>
                 </View>
               </View>
