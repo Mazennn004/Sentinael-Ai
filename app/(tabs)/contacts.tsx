@@ -65,9 +65,7 @@ export default function ContactsScreen() {
                 Emergency
               </Text>
             </View>
-            <Text className="text-2xl font-extrabold text-white">
-              Contacts
-            </Text>
+            <Text className="text-2xl font-extrabold text-white">Contacts</Text>
           </View>
           <TouchableOpacity
             className="rounded-[14px] overflow-hidden"
@@ -85,7 +83,11 @@ export default function ContactsScreen() {
 
         {/* Info banner */}
         <View className="flex-row bg-[rgba(0,180,200,0.04)] rounded-[14px] p-3.5 gap-2.5 border border-[rgba(0,180,200,0.1)] mb-5 items-start">
-          <Ionicons name="information-circle-outline" size={16} color="#00B4C6" />
+          <Ionicons
+            name="information-circle-outline"
+            size={16}
+            color="#00B4C6"
+          />
           <Text className="flex-1 text-[11px] text-white/35 leading-[17px]">
             These contacts will be notified automatically if an accident is
             detected and you don't respond within 10 seconds.
@@ -95,15 +97,25 @@ export default function ContactsScreen() {
         <View>
           {contacts.length === 0 ? (
             <View className="items-center py-[60px] gap-2">
-              <Ionicons name="people-outline" size={48} color="rgba(255,255,255,0.08)" />
-              <Text className="text-base font-semibold text-white/30">No contacts yet</Text>
+              <Ionicons
+                name="people-outline"
+                size={48}
+                color="rgba(255,255,255,0.08)"
+              />
+              <Text className="text-base font-semibold text-white/30">
+                No contacts yet
+              </Text>
               <Text className="text-[13px] text-white/15 text-center px-10">
                 Add emergency contacts who'll be notified in case of an accident
               </Text>
             </View>
           ) : (
             contacts.map((contact) => (
-              <ContactCard key={contact.id} contact={contact} onDelete={handleDelete} />
+              <ContactCard
+                key={contact.id}
+                contact={contact}
+                onDelete={handleDelete}
+              />
             ))
           )}
         </View>
@@ -112,12 +124,20 @@ export default function ContactsScreen() {
       </ScrollView>
 
       {/* Add Contact Modal */}
-      <Modal visible={showAddModal} transparent animationType="slide" statusBarTranslucent>
+      <Modal
+        visible={showAddModal}
+        transparent
+        animationType="slide"
+        statusBarTranslucent
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1 justify-end"
         >
-          <View className="flex-1 bg-black/70" onTouchEnd={() => setShowAddModal(false)} />
+          <View
+            className="flex-1 bg-black/70"
+            onTouchEnd={() => setShowAddModal(false)}
+          />
           <View
             className="bg-dark-800 rounded-t-[28px] p-6 gap-4"
             style={{ paddingBottom: (insets.bottom || 0) + 20 }}
@@ -128,7 +148,11 @@ export default function ContactsScreen() {
             </Text>
 
             <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
-              <Ionicons name="person-outline" size={16} color="rgba(255,255,255,0.25)" />
+              <Ionicons
+                name="person-outline"
+                size={16}
+                color="rgba(255,255,255,0.25)"
+              />
               <TextInput
                 className="flex-1 text-white text-sm"
                 placeholder="Full name"
@@ -139,7 +163,11 @@ export default function ContactsScreen() {
             </View>
 
             <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
-              <Ionicons name="call-outline" size={16} color="rgba(255,255,255,0.25)" />
+              <Ionicons
+                name="call-outline"
+                size={16}
+                color="rgba(255,255,255,0.25)"
+              />
               <TextInput
                 className="flex-1 text-white text-sm"
                 placeholder="Phone number"
@@ -151,7 +179,11 @@ export default function ContactsScreen() {
             </View>
 
             <View className="flex-row items-center bg-[rgba(10,18,30,0.8)] rounded-[14px] px-4 border border-[rgba(0,180,200,0.08)] h-[50px] gap-3">
-              <Ionicons name="heart-outline" size={16} color="rgba(255,255,255,0.25)" />
+              <Ionicons
+                name="heart-outline"
+                size={16}
+                color="rgba(255,255,255,0.25)"
+              />
               <TextInput
                 className="flex-1 text-white text-sm"
                 placeholder="Relationship (e.g. Father, Doctor)"
@@ -166,7 +198,9 @@ export default function ContactsScreen() {
                 className="flex-1 h-[50px] rounded-[14px] bg-white/[0.04] items-center justify-center border border-white/[0.04]"
                 onPress={() => setShowAddModal(false)}
               >
-                <Text className="text-white/40 text-[15px] font-semibold">Cancel</Text>
+                <Text className="text-white/40 text-[15px] font-semibold">
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 rounded-[14px] overflow-hidden"
@@ -175,10 +209,18 @@ export default function ContactsScreen() {
               >
                 <LinearGradient
                   colors={["#00D4E6", "#00B4C6"]}
-               
-                  style={{flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 16, paddingHorizontal: 24, gap: 8}}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingVertical: 16,
+                    paddingHorizontal: 24,
+                    gap: 8,
+                  }}
                 >
-                  <Text className="text-dark-950 text-[15px] font-bold">Save Contact</Text>
+                  <Text className="text-dark-950 text-[15px] font-bold">
+                    Save Contact
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>

@@ -32,7 +32,10 @@ export default function ProcessingScreen() {
   };
 
   return (
-    <View className="flex-1 bg-dark-950" style={{ paddingTop: insets.top + 20 }}>
+    <View
+      className="flex-1 bg-dark-950"
+      style={{ paddingTop: insets.top + 20 }}
+    >
       <LinearGradient
         colors={["#060A0F", "#0A0E17", "#0A1018"]}
         className="absolute inset-0"
@@ -42,7 +45,11 @@ export default function ProcessingScreen() {
       <View className="items-center px-8 gap-2 mb-10">
         <View
           className="w-14 h-14 rounded-2xl items-center justify-center mb-2 border border-[rgba(0,180,200,0.1)]"
-          style={{ backgroundColor: isComplete ? "rgba(200,230,54,0.08)" : "rgba(0,180,200,0.06)" }}
+          style={{
+            backgroundColor: isComplete
+              ? "rgba(200,230,54,0.08)"
+              : "rgba(0,180,200,0.06)",
+          }}
         >
           <Ionicons
             name={isComplete ? "checkmark-circle" : "sync"}
@@ -86,11 +93,19 @@ export default function ProcessingScreen() {
               colors={["#00D4E6", "#00B4C6"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-             
-              style={{flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 16, paddingHorizontal: 24, gap: 8}}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                paddingVertical: 16,
+                paddingHorizontal: 24,
+                gap: 8,
+              }}
             >
               <Ionicons name="document-text" size={20} color="#060A0F" />
-              <Text className="text-dark-950 text-base font-bold">View Report</Text>
+              <Text className="text-dark-950 text-base font-bold">
+                View Report
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
 

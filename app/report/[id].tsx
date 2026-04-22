@@ -78,10 +78,16 @@ export default function ReportDetailScreen() {
           className="w-10 h-10 rounded-xl bg-white/[0.04] items-center justify-center"
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="rgba(255,255,255,0.6)" />
+          <Ionicons
+            name="chevron-back"
+            size={22}
+            color="rgba(255,255,255,0.6)"
+          />
         </TouchableOpacity>
         <View className="items-center">
-          <Text className="text-[17px] font-bold text-white">Incident Report</Text>
+          <Text className="text-[17px] font-bold text-white">
+            Incident Report
+          </Text>
           <Text className="text-[11px] text-white/25 font-mono mt-0.5">
             ID: AI-{incident.id.toUpperCase().slice(0, 4)}-RX
           </Text>
@@ -105,7 +111,11 @@ export default function ReportDetailScreen() {
               Dashcam Evidence
             </Text>
             <View className="flex-row items-center gap-1.5">
-              <Ionicons name="calendar-outline" size={12} color="rgba(255,255,255,0.3)" />
+              <Ionicons
+                name="calendar-outline"
+                size={12}
+                color="rgba(255,255,255,0.3)"
+              />
               <Text className="text-[11px] text-white/30 font-medium">
                 {incident.date}, {incident.time}
               </Text>
@@ -147,9 +157,7 @@ export default function ReportDetailScreen() {
         </View>
 
         {/* Severity card */}
-        <View
-          className="bg-[rgba(255,59,92,0.04)] rounded-2xl p-4 border border-[rgba(255,59,92,0.1)] mb-3 flex-row items-center"
-        >
+        <View className="bg-[rgba(255,59,92,0.04)] rounded-2xl p-4 border border-[rgba(255,59,92,0.1)] mb-3 flex-row items-center">
           <View className="w-12 h-12 rounded-xl bg-[rgba(255,59,92,0.1)] items-center justify-center mr-3">
             <Ionicons name="warning" size={24} color={severityColor} />
           </View>
@@ -157,13 +165,20 @@ export default function ReportDetailScreen() {
             <Text className="text-[10px] text-white/35 font-bold tracking-[1.5px] uppercase">
               Assessed Severity
             </Text>
-            <Text className="text-lg font-bold mt-0.5" style={{ color: severityColor }}>
+            <Text
+              className="text-lg font-bold mt-0.5"
+              style={{ color: severityColor }}
+            >
               {SEVERITY_LABELS[incident.severity]}
             </Text>
           </View>
           <View className="items-end">
-            <Text className="text-[10px] text-white/30 font-medium">Confidence</Text>
-            <Text className="text-lg font-bold text-[#00B4C6] font-mono">98.4%</Text>
+            <Text className="text-[10px] text-white/30 font-medium">
+              Confidence
+            </Text>
+            <Text className="text-lg font-bold text-[#00B4C6] font-mono">
+              98.4%
+            </Text>
           </View>
         </View>
 
@@ -172,7 +187,11 @@ export default function ReportDetailScreen() {
           {/* Impact Type */}
           <View className="flex-1 bg-[rgba(10,18,30,0.8)] rounded-2xl p-4 border border-[rgba(0,180,200,0.08)]">
             <View className="flex-row items-center gap-1.5 mb-2.5">
-              <Ionicons name="car-outline" size={14} color="rgba(255,255,255,0.35)" />
+              <Ionicons
+                name="car-outline"
+                size={14}
+                color="rgba(255,255,255,0.35)"
+              />
               <Text className="text-[10px] text-white/30 font-bold tracking-[1.5px] uppercase">
                 Impact Type
               </Text>
@@ -198,7 +217,12 @@ export default function ReportDetailScreen() {
             </View>
             {/* Mini chart */}
             <View className="h-[20px] mt-1">
-              <Svg width="100%" height={20} viewBox="0 0 100 20" preserveAspectRatio="none">
+              <Svg
+                width="100%"
+                height={20}
+                viewBox="0 0 100 20"
+                preserveAspectRatio="none"
+              >
                 <Polyline
                   points="0,16 15,14 25,12 35,10 45,6 55,2 65,4 75,8 85,14 100,16"
                   fill="none"

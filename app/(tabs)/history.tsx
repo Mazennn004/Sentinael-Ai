@@ -29,9 +29,7 @@ export default function HistoryScreen() {
               Incident Reports
             </Text>
           </View>
-          <Text className="text-2xl font-extrabold text-white">
-            History
-          </Text>
+          <Text className="text-2xl font-extrabold text-white">History</Text>
         </View>
 
         {/* Summary Bar */}
@@ -81,9 +79,17 @@ export default function HistoryScreen() {
         <View>
           {mockIncidents.length === 0 ? (
             <View className="items-center py-[60px] gap-2">
-              <Ionicons name="document-text-outline" size={48} color="rgba(255,255,255,0.08)" />
-              <Text className="text-base font-semibold text-white/30">No incidents yet</Text>
-              <Text className="text-[13px] text-white/15">Your drive history will appear here</Text>
+              <Ionicons
+                name="document-text-outline"
+                size={48}
+                color="rgba(255,255,255,0.08)"
+              />
+              <Text className="text-base font-semibold text-white/30">
+                No incidents yet
+              </Text>
+              <Text className="text-[13px] text-white/15">
+                Your drive history will appear here
+              </Text>
             </View>
           ) : (
             mockIncidents.map((incident) => (

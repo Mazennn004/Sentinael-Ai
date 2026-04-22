@@ -25,6 +25,7 @@ const AnimatedLine = Animated.createAnimatedComponent(Line);
 interface RadarSpeedometerProps {
   speed: number;
   maxSpeed?: number;
+  disabled?: boolean;
 }
 
 const SIZE = 280;
@@ -35,11 +36,18 @@ const RINGS = [120, 95, 70, 45];
 export default function RadarSpeedometer({
   speed,
   maxSpeed = 200,
+  disabled = false,
 }: RadarSpeedometerProps) {
   const sweepAngle = useSharedValue(0);
   const glowOpacity = useSharedValue(0.4);
 
   useEffect(() => {
+    if (disabled) {
+      // Freeze animations — no permission, no radar
+      sweepAngle.value = 0;
+      glowOpacity.value = 0.15;
+      return;
+    }
     // Radar sweep rotation
     sweepAngle.value = withRepeat(
       withTiming(360, { duration: 3000, easing: Easing.linear }),
@@ -52,7 +60,7 @@ export default function RadarSpeedometer({
       -1,
       true,
     );
-  }, []);
+  }, [disabled]);
 
   const sweepStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${sweepAngle.value}deg` }],
@@ -213,10 +221,10 @@ export default function RadarSpeedometer({
           color="rgba(0, 200, 220, 0.5)"
         />
         <Text className="text-[52px] font-black text-white leading-[56px] mt-1">
-          {speed}
+          {disabled ? "--" : speed}
         </Text>
         <Text className="text-[13px] font-bold text-white/30 tracking-[4px] -mt-1">
-          MPH
+          KM/H
         </Text>
       </View>
     </View>

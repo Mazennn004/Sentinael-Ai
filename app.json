@@ -9,7 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMotionUsageDescription": "Sentinel AI needs motion sensor access to detect accidents in real time.",
+        "NSLocationWhenInUseUsageDescription": "Sentinel AI uses your location to record crash coordinates and calculate speed.",
+        "NSLocationAlwaysUsageDescription": "Sentinel AI monitors your location in the background to detect accidents even when the app is minimized."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +24,11 @@
         "monochromeImage": "./assets/images/sentinel-transparent.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "HIGH_SAMPLING_RATE_SENSORS"
+      ]
     },
     "web": {
       "output": "static",
@@ -28,6 +37,20 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Sentinel AI needs motion access to detect accidents and keep you safe."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Sentinel AI uses your location to record crash coordinates and calculate speed.",
+          "locationAlwaysAndWhenInUsePermission": "Sentinel AI monitors your location in the background to detect accidents even when the app is minimized.",
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
       [
         "expo-splash-screen",
         {

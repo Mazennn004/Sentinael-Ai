@@ -10,6 +10,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { DeviceMotion } from "expo-sensors";
+import * as Location from "expo-location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useSharedValue,
@@ -70,15 +72,32 @@ export default function OTPScreen() {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const code = otp.join("");
     if (code.length < OTP_LENGTH) {
       setError("Please enter the full 6-digit code.");
       triggerShake();
       return;
     }
-    // Mock: any 6-digit code works
-    router.replace("/(tabs)" as any);
+
+    // Check if both permissions are already granted
+    try {
+      const [motion, location] = await Promise.all([
+        DeviceMotion.getPermissionsAsync().catch(() => ({ granted: true })),
+        Location.getForegroundPermissionsAsync(),
+      ]);
+
+      if (motion.granted && location.granted) {
+        // Both granted — skip onboarding, go straight to Home
+        router.replace("/(tabs)" as any);
+      } else {
+        // At least one missing — go through onboarding
+        router.replace("/(onboarding)/motion-permission" as any);
+      }
+    } catch {
+      // Fallback: go through onboarding to be safe
+      router.replace("/(onboarding)/motion-permission" as any);
+    }
   };
 
   const handleResend = () => {

@@ -26,6 +26,7 @@ interface SensorCardProps {
   badgeColor?: string;
   barColor?: string;
   barPercent?: number;
+  disabled?: boolean;
 }
 
 export default function SensorCard({
@@ -39,12 +40,21 @@ export default function SensorCard({
   badgeColor = "rgba(255,255,255,0.08)",
   barColor = "#00E68A",
   barPercent = 40,
+  disabled = false,
 }: SensorCardProps) {
   const dotPulse = useSharedValue(0.6);
   const wavePhase = useSharedValue(0);
   const barSlide = useSharedValue(0);
 
   useEffect(() => {
+    if (disabled) {
+      // Freeze all animations at their initial values
+      dotPulse.value = 0.3;
+      wavePhase.value = 0;
+      barSlide.value = 0;
+      return;
+    }
+
     // Pulsing status dot
     dotPulse.value = withRepeat(
       withSequence(
@@ -71,7 +81,7 @@ export default function SensorCard({
       -1,
       true
     );
-  }, []);
+  }, [disabled]);
 
   const dotStyle = useAnimatedStyle(() => ({
     opacity: dotPulse.value,

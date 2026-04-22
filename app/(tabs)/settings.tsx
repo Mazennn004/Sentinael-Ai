@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Switch,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -43,7 +37,9 @@ function SettingRow({
       </View>
       <View className="flex-1 gap-0.5">
         <Text className="text-[15px] text-white/75 font-medium">{label}</Text>
-        {subtitle && <Text className="text-[11px] text-white/25">{subtitle}</Text>}
+        {subtitle && (
+          <Text className="text-[11px] text-white/25">{subtitle}</Text>
+        )}
       </View>
       {hasToggle ? (
         <Switch
@@ -56,7 +52,11 @@ function SettingRow({
           thumbColor={toggleValue ? "#00B4C6" : "rgba(255,255,255,0.3)"}
         />
       ) : (
-        <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.12)" />
+        <Ionicons
+          name="chevron-forward"
+          size={18}
+          color="rgba(255,255,255,0.12)"
+        />
       )}
     </View>
   );
@@ -99,9 +99,7 @@ export default function SettingsScreen() {
               Configuration
             </Text>
           </View>
-          <Text className="text-2xl font-extrabold text-white">
-            Settings
-          </Text>
+          <Text className="text-2xl font-extrabold text-white">Settings</Text>
         </View>
 
         {/* Profile Card */}
@@ -115,15 +113,24 @@ export default function SettingsScreen() {
               className="w-[52px] h-[52px] items-center justify-center"
             >
               <Text className="text-lg font-bold text-dark-950">
-                {mockUser.name.split(" ").map((n) => n[0]).join("")}
+                {mockUser.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </Text>
             </LinearGradient>
           </View>
           <View className="flex-1 gap-0.5">
-            <Text className="text-base font-bold text-white">{mockUser.name}</Text>
+            <Text className="text-base font-bold text-white">
+              {mockUser.name}
+            </Text>
             <Text className="text-[13px] text-white/30">{mockUser.email}</Text>
           </View>
-          <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.15)" />
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color="rgba(255,255,255,0.15)"
+          />
         </TouchableOpacity>
 
         {/* Vehicle Info */}
@@ -227,7 +234,9 @@ export default function SettingsScreen() {
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={20} color="#FF3B5C" />
-          <Text className="text-[15px] font-semibold text-severity-critical">Sign Out</Text>
+          <Text className="text-[15px] font-semibold text-severity-critical">
+            Sign Out
+          </Text>
         </TouchableOpacity>
 
         <Text className="text-center text-[10px] text-white/[0.08] mb-2 font-mono">

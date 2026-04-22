@@ -6,7 +6,10 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { mockFines, type TrafficFine } from "@/data/mockData";
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; color: string; bg: string }
+> = {
   unpaid: {
     label: "UNPAID",
     color: "#FF3B5C",
@@ -35,7 +38,11 @@ function FineCard({ fine }: { fine: TrafficFine }) {
             {fine.description}
           </Text>
           <View className="flex-row items-center gap-1.5 mt-1.5">
-            <Ionicons name="location-outline" size={11} color="rgba(255,255,255,0.2)" />
+            <Ionicons
+              name="location-outline"
+              size={11}
+              color="rgba(255,255,255,0.2)"
+            />
             <Text className="text-[11px] text-white/20">{fine.location}</Text>
           </View>
         </View>
@@ -56,8 +63,14 @@ function FineCard({ fine }: { fine: TrafficFine }) {
 
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-1.5">
-          <Ionicons name="calendar-outline" size={12} color="rgba(255,255,255,0.2)" />
-          <Text className="text-[11px] text-white/25 font-mono">{fine.date}</Text>
+          <Ionicons
+            name="calendar-outline"
+            size={12}
+            color="rgba(255,255,255,0.2)"
+          />
+          <Text className="text-[11px] text-white/25 font-mono">
+            {fine.date}
+          </Text>
         </View>
 
         {fine.linkedIncidentId && (
@@ -107,7 +120,11 @@ export default function FinesScreen() {
           className="w-10 h-10 rounded-xl bg-white/[0.04] items-center justify-center mr-3"
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="rgba(255,255,255,0.5)" />
+          <Ionicons
+            name="chevron-back"
+            size={22}
+            color="rgba(255,255,255,0.5)"
+          />
         </TouchableOpacity>
         <View className="flex-1">
           <Text className="text-[10px] text-white/30 font-bold tracking-[2px] uppercase">
@@ -134,10 +151,13 @@ export default function FinesScreen() {
               <Text className="text-[36px] font-black text-white font-mono">
                 {unpaidTotal.toLocaleString()}
               </Text>
-              <Text className="text-[15px] text-white/30 font-semibold">EGP</Text>
+              <Text className="text-[15px] text-white/30 font-semibold">
+                EGP
+              </Text>
             </View>
             <Text className="text-[11px] text-white/25 mt-1">
-              {unpaidCount} unpaid {unpaidCount === 1 ? "fine" : "fines"} pending
+              {unpaidCount} unpaid {unpaidCount === 1 ? "fine" : "fines"}{" "}
+              pending
             </Text>
           </View>
         )}
@@ -148,7 +168,9 @@ export default function FinesScreen() {
             <View className="w-16 h-16 rounded-2xl bg-[rgba(0,230,138,0.06)] items-center justify-center mb-2">
               <Ionicons name="checkmark-circle" size={32} color="#00E68A" />
             </View>
-            <Text className="text-base font-semibold text-white/40">No fines</Text>
+            <Text className="text-base font-semibold text-white/40">
+              No fines
+            </Text>
             <Text className="text-[13px] text-white/20 text-center px-10">
               You're in good standing. Keep driving safely!
             </Text>

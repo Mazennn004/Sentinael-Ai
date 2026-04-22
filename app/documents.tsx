@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert ,Image } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -30,7 +37,7 @@ export default function DocumentsScreen() {
     Alert.alert(
       "Renewal Request",
       `Your ${type} renewal request has been submitted. You will receive a notification when it's approved.`,
-      [{ text: "OK" }]
+      [{ text: "OK" }],
     );
   };
 
@@ -59,7 +66,11 @@ export default function DocumentsScreen() {
           className="w-10 h-10 rounded-xl bg-white/[0.04] items-center justify-center mr-3"
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="rgba(255,255,255,0.5)" />
+          <Ionicons
+            name="chevron-back"
+            size={22}
+            color="rgba(255,255,255,0.5)"
+          />
         </TouchableOpacity>
         <View className="flex-1">
           <Text className="text-[10px] text-white/30 font-bold tracking-[2px] uppercase">
@@ -88,9 +99,14 @@ export default function DocumentsScreen() {
               colors={["#00546B", "#003847"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-             
               <Text className="text-white/50 text-[9px] font-bold tracking-wider">
                 ARAB REPUBLIC OF EGYPT
               </Text>
@@ -101,7 +117,11 @@ export default function DocumentsScreen() {
               <View className="flex-row gap-3.5 mb-4">
                 {/* Photo placeholder */}
                 <View className="w-[72px] h-[90px] rounded-xl bg-[rgba(0,180,200,0.06)] items-center justify-center border border-[rgba(0,180,200,0.1)]">
-                  <Ionicons name="person" size={32} color="rgba(0,180,200,0.3)" />
+                  <Ionicons
+                    name="person"
+                    size={32}
+                    color="rgba(0,180,200,0.3)"
+                  />
                 </View>
                 <View className="flex-1 gap-1">
                   <Text className="text-[17px] font-bold text-white">
@@ -111,7 +131,9 @@ export default function DocumentsScreen() {
                     {mockDriverLicense.nameAr}
                   </Text>
                   <View className="flex-row items-center gap-1.5 mt-1">
-                    <Text className="text-[10px] text-white/20 font-mono">NID</Text>
+                    <Text className="text-[10px] text-white/20 font-mono">
+                      NID
+                    </Text>
                     <Text className="text-[13px] text-white/60 font-mono font-semibold">
                       {mockDriverLicense.nationalId}
                     </Text>
@@ -121,10 +143,16 @@ export default function DocumentsScreen() {
 
               <View className="h-px bg-white/[0.04] mb-2" />
 
-              <InfoRow label="License No." value={mockDriverLicense.licenseNumber} />
+              <InfoRow
+                label="License No."
+                value={mockDriverLicense.licenseNumber}
+              />
               <InfoRow label="Class" value={mockDriverLicense.licenseClass} />
               <InfoRow label="Blood Type" value={mockDriverLicense.bloodType} />
-              <InfoRow label="Governorate" value={mockDriverLicense.governorate} />
+              <InfoRow
+                label="Governorate"
+                value={mockDriverLicense.governorate}
+              />
               <InfoRow label="Issue Date" value={mockDriverLicense.issueDate} />
 
               <View className="h-px bg-white/[0.04] my-2" />
@@ -179,9 +207,14 @@ export default function DocumentsScreen() {
               colors={["#3D1500", "#2A1000"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-             
               <Text className="text-white/40 text-[9px] font-bold tracking-wider">
                 VEHICLE LICENSE
               </Text>
@@ -198,17 +231,33 @@ export default function DocumentsScreen() {
                   </Text>
                 </View>
                 <View className="w-12 h-12 rounded-xl bg-[rgba(0,180,200,0.06)] items-center justify-center border border-[rgba(0,180,200,0.08)]">
-                  <Ionicons name="car-sport" size={22} color="rgba(0,180,200,0.4)" />
+                  <Ionicons
+                    name="car-sport"
+                    size={22}
+                    color="rgba(0,180,200,0.4)"
+                  />
                 </View>
               </View>
 
               <View className="h-px bg-white/[0.04] mb-2" />
 
               <InfoRow label="Owner" value={mockCarRegistration.ownerName} />
-              <InfoRow label="Reg. No." value={mockCarRegistration.registrationNumber} />
-              <InfoRow label="Engine" value={mockCarRegistration.engineNumber} />
-              <InfoRow label="Chassis" value={mockCarRegistration.chassisNumber} />
-              <InfoRow label="Issue Date" value={mockCarRegistration.issueDate} />
+              <InfoRow
+                label="Reg. No."
+                value={mockCarRegistration.registrationNumber}
+              />
+              <InfoRow
+                label="Engine"
+                value={mockCarRegistration.engineNumber}
+              />
+              <InfoRow
+                label="Chassis"
+                value={mockCarRegistration.chassisNumber}
+              />
+              <InfoRow
+                label="Issue Date"
+                value={mockCarRegistration.issueDate}
+              />
 
               <View className="h-px bg-white/[0.04] my-2" />
 
@@ -259,9 +308,14 @@ export default function DocumentsScreen() {
           {/* Realistic Egyptian plate */}
           <View className="items-center justify-center w-full mt-2">
             <View className="w-[270px] h-[170px] relative justify-center ">
-              <Image 
-                source={require("../assets/images/car plate.png")} 
-                style={{ width: "100%", height: "100%", position: "absolute",borderRadius:10 }}
+              <Image
+                source={require("../assets/images/car plate.png")}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  borderRadius: 10,
+                }}
                 resizeMode="cover"
               />
               {/* Text Overlay Container — Placed over the white area of the plate */}

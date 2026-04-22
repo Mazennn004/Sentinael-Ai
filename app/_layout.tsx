@@ -19,6 +19,8 @@ export default function RootLayout() {
         >
           {/* Auth screens */}
           <Stack.Screen name="(auth)" />
+          {/* Onboarding screens */}
+          <Stack.Screen name="(onboarding)" />
           {/* Main tab screens */}
           <Stack.Screen name="(tabs)" />
           {/* Modal screens */}

@@ -7,9 +7,20 @@ import { router } from "expo-router";
 import RadarSpeedometer from "@/components/RadarSpeedometer";
 import SensorCard from "@/components/SensorCard";
 import { mockFines } from "@/data/mockData";
+import { useSensorPermissions } from "@/hooks/useSensorPermissions";
+import { useDeviceMotion } from "@/hooks/useDeviceMotion";
+import { useRealtimeSpeed } from "@/hooks/useRealtimeSpeed";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { status, checkPermissions } = useSensorPermissions();
+
+  const isGranted = status === "granted";
+  const isLoading = status === "loading";
+
+  // Mount sensor hooks — they internally check permission before subscribing
+  const { displayData } = useDeviceMotion();
+  const { displaySpeed } = useRealtimeSpeed();
 
   const unpaidCount = mockFines.filter((f) => f.status === "unpaid").length;
   const unpaidTotal = mockFines
@@ -54,48 +65,114 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Radar Speedometer */}
+        {/* Radar Speedometer — real GPS speed when granted */}
         <View className="items-center mt-2">
-          <RadarSpeedometer speed={42} />
+          <RadarSpeedometer
+            speed={isGranted ? displaySpeed : 0}
+            disabled={!isGranted}
+          />
         </View>
 
-        {/* Status text */}
+        {/* Status text — conditional based on permission */}
         <View className="items-center mt-1 gap-1.5">
-          <Text className="text-xl font-bold text-white">Active Monitoring</Text>
-          <View className="flex-row items-center gap-2">
-            <View className="flex-row items-center gap-1">
-              <Ionicons name="time-outline" size={13} color="rgba(255,255,255,0.35)" />
-              <Text className="text-[13px] text-white/35 font-medium">14m 22s</Text>
-            </View>
-            <Text className="text-white/15 text-xs">•</Text>
-            <View className="flex-row items-center gap-1">
-              <Ionicons name="navigate-outline" size={13} color="rgba(255,255,255,0.35)" />
-              <Text className="text-[13px] text-white/35 font-medium">6.2 miles</Text>
-            </View>
-          </View>
+          {isLoading ? (
+            <Text className="text-xl font-bold text-white/40">
+              Checking Permissions...
+            </Text>
+          ) : isGranted ? (
+            <>
+              <Text className="text-xl font-bold text-white">
+                Active Monitoring
+              </Text>
+              <View className="flex-row items-center gap-2">
+                <View className="flex-row items-center gap-1">
+                  <Ionicons
+                    name="time-outline"
+                    size={13}
+                    color="rgba(255,255,255,0.35)"
+                  />
+                  <Text className="text-[13px] text-white/35 font-medium">
+                    14m 22s
+                  </Text>
+                </View>
+                <Text className="text-white/15 text-xs">•</Text>
+                <View className="flex-row items-center gap-1">
+                  <Ionicons
+                    name="navigate-outline"
+                    size={13}
+                    color="rgba(255,255,255,0.35)"
+                  />
+                  <Text className="text-[13px] text-white/35 font-medium">
+                    6.2 miles
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="shield-outline" size={20} color="#FF3B5C" />
+                <Text className="text-xl font-bold text-[#FF3B5C]">
+                  Permission Not Enabled
+                </Text>
+              </View>
+              <Text className="text-[13px] text-white/30 text-center px-10">
+                Sentinel AI needs sensor and location access to monitor for
+                accidents. Allow these permissions from phone settings to enable full Sentinel AI
+                functionality.
+              </Text>
+              {/* Grant Permission button — navigates to onboarding flow */}
+              <TouchableOpacity
+                onPress={() => router.push("/(onboarding)/motion-permission" as any)}
+                activeOpacity={0.8}
+                className="mt-2 rounded-[14px] overflow-hidden"
+              >
+                <LinearGradient
+                  colors={["#00D4E6", "#00B4C6"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingVertical: 12,
+                    paddingHorizontal: 24,
+                    gap: 8,
+                  }}
+                >
+                  <Ionicons name="lock-open-outline" size={16} color="#060A0F" />
+                  <Text className="text-dark-950 text-sm font-bold tracking-wide">
+                    Grant Permission
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
-        {/* Sensor Cards */}
+        {/* Sensor Cards — live data from useDeviceMotion */}
         <View className="flex-row gap-3 px-5 mt-6">
           <SensorCard
             label="G-FORCE"
-            value="1.02"
+            value={isGranted ? displayData.gForce.toFixed(2) : "-"}
             unit="G"
             icon="pulse-outline"
-            iconColor="#00B4C6"
+            iconColor={isGranted ? "#00B4C6" : "rgba(255,255,255,0.2)"}
             variant="wave"
-            badgeText="SAFE"
+            badgeText={isGranted ? "SAFE" : undefined}
             badgeColor="rgba(255,255,255,0.08)"
+            disabled={!isGranted}
           />
           <SensorCard
             label="GYRO"
-            value="-0.3"
+            value={isGranted ? displayData.angularVelocity.toFixed(1) : "-"}
             unit="°/s"
             icon="compass-outline"
-            iconColor="rgba(255,255,255,0.4)"
+            iconColor={isGranted ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.2)"}
             variant="bar"
-            barColor="#00E68A"
+            barColor={isGranted ? "#00E68A" : "rgba(255,255,255,0.1)"}
             barPercent={40}
+            disabled={!isGranted}
           />
         </View>
 
@@ -136,7 +213,9 @@ export default function HomeScreen() {
                 </View>
               )}
             </View>
-            <Text className="text-[14px] font-bold text-white/80 mb-0.5">Fines</Text>
+            <Text className="text-[14px] font-bold text-white/80 mb-0.5">
+              Fines
+            </Text>
             {unpaidCount > 0 ? (
               <Text className="text-[10px] text-severity-critical/70">
                 {unpaidTotal.toLocaleString()} EGP unpaid
